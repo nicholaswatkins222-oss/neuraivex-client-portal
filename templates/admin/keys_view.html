@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}API Keys — {{ client.name }} — Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="label" style="margin-bottom:8px;"><a href="{{ url_for('admin.client_detail', client_id=client.id) }}" style="color:var(--accent-blue); text-decoration:none;">← {{ client.name }}</a></div>
+  <h1 class="page-title">API Keys</h1>
+  <p class="page-subtitle">Encrypted keys submitted by {{ client.name }}. Password required to decrypt.</p>
+</div>
+
+{% if not confirmed %}
+<div class="card card-accent" style="max-width:480px;">
+  <div class="card-title" style="margin-bottom:6px;">Confirm Your Identity</div>
+  <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Enter your admin password to decrypt and view client API keys.</p>
+  <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <div class="form-group">
+      <label class="form-label">Admin Password</label>
+      <input class="form-input" type="password" name="password" placeholder="••••••••" required autocomplete="current-password" />
+    </div>
+    <button type="submit" class="btn-primary" style="width:100%;">Decrypt Keys</button>
+  </form>
+</div>
+{% else %}
+
+{% if not keys %}
+<div class="card">
+  <p style="font-size:13px; color:var(--text-muted);">{{ client.name }} hasn't submitted any API keys yet.</p>
+</div>
+{% else %}
+<div style="background:rgba(240,88,88,0.06); border:1px solid rgba(240,88,88,0.2); border-radius:10px; padding:12px 18px; margin-bottom:20px; font-size:13px; color:var(--danger); font-family:'Space Grotesk',sans-serif;">
+  Decrypted keys are visible below. Do not share this page. Refresh or navigate away to clear.
+</div>
+
+<div class="card">
+  {% for item in decrypted_keys %}
+  <div class="key-row">
+    <div style="flex:1;">
+      <div class="key-service">{{ item.key.service_name }}</div>
+      <div style="font-family:'Space Grotesk',sans-serif; font-size:12px; color:var(--accent-blue); letter-spacing:0.05em; margin-top:4px; word-break:break-all;">{{ item.plain }}</div>
+      {% if item.key.note %}
+      <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">{{ item.key.note }}</div>
+      {% endif %}
+      <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Submitted {{ item.key.created_at|strfdate('%b %-d, %Y') }}</div>
+    </div>
+    <span class="pill pill-success" style="font-size:10px; flex-shrink:0; margin-left:16px;">Active</span>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% endif %}
+{% endblock %}

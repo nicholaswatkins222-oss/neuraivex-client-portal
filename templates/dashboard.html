@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — Neuraivex Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="label" style="margin-bottom:8px;">Welcome back</div>
+  <h1 class="page-title">Good {% if now.hour < 12 %}morning{% elif now.hour < 17 %}afternoon{% else %}evening{% endif %}, {{ current_user.name.split()[0] }}</h1>
+  <p class="page-subtitle">Here's an overview of your project with Neuraivex.</p>
+</div>
+
+<!-- STAT CARDS -->
+<div class="stat-grid">
+  <div class="stat-card card-accent">
+    <div class="label" style="margin-bottom:10px;">Leads This Month</div>
+    <div class="stat-value gradient-text">{{ leads_this_month }}</div>
+    <div class="stat-delta" style="color:var(--text-muted);">Calendar month</div>
+  </div>
+  <div class="stat-card">
+    <div class="label" style="margin-bottom:10px;">Project Phase</div>
+    {% if current_phase %}
+    <div class="stat-value" style="font-size:20px; padding-top:5px;">
+      {% if current_phase.status == 'active' %}<span class="pill pill-blue">{{ current_phase.name }}</span>
+      {% elif current_phase.status == 'done' %}<span class="pill pill-success">{{ current_phase.name }}</span>
+      {% else %}<span class="pill pill-muted">{{ current_phase.name }}</span>{% endif %}
+    </div>
+    {% else %}
+    <div class="stat-value" style="font-size:14px; padding-top:8px; color:var(--text-muted);">No project</div>
+    {% endif %}
+    <div class="stat-delta" style="color:var(--text-muted);">Current phase</div>
+  </div>
+  <div class="stat-card">
+    <div class="label" style="margin-bottom:10px;">Open Invoices</div>
+    <div class="stat-value" style="color:var(--warning);">${{ '{:,.0f}'.format(open_total) }}</div>
+    {% if next_due %}<div class="stat-delta" style="color:var(--text-muted);">Due {{ next_due|strfdate('%b %-d') }}</div>
+    {% else %}<div class="stat-delta" style="color:var(--success);">All paid up</div>{% endif %}
+  </div>
+  <div class="stat-card">
+    <div class="label" style="margin-bottom:10px;">Unread Messages</div>
+    <div class="stat-value" style="color:var(--accent-blue);">{{ unread_count }}</div>
+    <div class="stat-delta" style="color:var(--text-muted);">From Nicholas</div>
+  </div>
+</div>
+
+<!-- GRID ROW -->
+<div class="grid-2" style="margin-bottom:20px;">
+
+  <!-- Project Summary -->
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <div class="card-title">Project Status</div>
+      <a href="{{ url_for('project.index') }}" class="btn-secondary btn-sm">View Details</a>
+    </div>
+    {% if all_phases %}
+    <div style="display:flex; flex-direction:column; gap:10px;">
+      {% for phase in all_phases %}
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px;
+        {% if phase.status == 'active' %}background:rgba(56,196,240,0.06); border:1px solid rgba(56,196,240,0.2);{% else %}background:var(--bg-elevated);{% endif %}
+        border-radius:8px; {% if phase.status == 'pending' %}opacity:0.5;{% endif %}">
+        <span style="font-size:13px; font-family:'Space Grotesk',sans-serif; font-weight:500;
+          {% if phase.status == 'active' %}color:var(--accent-blue);{% endif %}">{{ phase.name }}</span>
+        {% if phase.status == 'done' %}<span class="pill pill-success">Done</span>
+        {% elif phase.status == 'active' %}<span class="pill pill-blue">In Progress</span>
+        {% else %}<span class="pill pill-muted">Pending</span>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="font-size:13px; color:var(--text-muted);">No project set up yet. Contact Nicholas to get started.</p>
+    {% endif %}
+  </div>
+
+  <!-- Recent Messages -->
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+      <div class="card-title">Recent Messages</div>
+      <a href="{{ url_for('messages.index') }}" class="btn-secondary btn-sm">Open Thread</a>
+    </div>
+    {% if recent_messages %}
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      {% for msg in recent_messages %}
+      <div style="padding:14px; background:var(--bg-elevated); border-radius:10px; border-left:2px solid {% if msg.sender_id == current_user.id %}var(--accent-violet){% else %}var(--accent-blue){% endif %};">
+        <div style="font-size:11px; color:{% if msg.sender_id == current_user.id %}var(--accent-violet){% else %}var(--accent-blue){% endif %}; font-family:'Space Grotesk',sans-serif; font-weight:600; margin-bottom:4px;">
+          {% if msg.sender_id == current_user.id %}You{% elif admin_user %}{{ admin_user.name }} · Neuraivex{% else %}Admin{% endif %}
+        </div>
+        <div style="font-size:13px; color:var(--text-secondary);">{{ msg.body[:120] }}{% if msg.body|length > 120 %}…{% endif %}</div>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:6px;">{{ msg.created_at|strfdate('%b %-d, %-I:%M %p') }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p style="font-size:13px; color:var(--text-muted);">No messages yet. Send Nicholas a message to get started.</p>
+    {% endif %}
+  </div>
+
+</div>
+
+<!-- Book a Call -->
+<div class="card">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <div>
+      <div class="card-title">Book a Check-in Call</div>
+      <p style="font-size:13px; color:var(--text-muted); margin-top:4px;">Schedule time with Nicholas to review progress or ask questions.</p>
+    </div>
+  </div>
+  <div class="calendly-placeholder">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 12px;display:block;"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <p style="font-size:13px; margin-bottom:16px;">Calendly scheduler will be embedded here</p>
+    <a href="#" class="btn-primary btn-sm">Open Calendly</a>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const now = new Date();
+</script>
+{% endblock %}

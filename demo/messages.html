@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messages — Neuraivex Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+<div class="portal-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header"><a href="dashboard.html" class="logo">NEURAIVE<span class="logo-x-wrap"><span class="logo-x">X</span><span class="logo-node"></span></span></a></div>
+    <div class="sidebar-client-info"><div class="sidebar-client-name">Jordan Rivera</div><div class="sidebar-client-company">Apex Marketing Co.</div></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <a href="project.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Project Status</a>
+      <a href="leads.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Lead Gen</a>
+      <a href="invoices.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Invoices</a>
+      <a href="messages.html" class="nav-item active"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messages</a>
+      <a href="keys.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>API Keys</a>
+    </nav>
+    <div class="sidebar-footer"><a href="login.html" class="logout-btn" onclick="sessionStorage.clear()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</a></div>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div class="label" style="margin-bottom:8px;">Direct Line</div>
+      <h1 class="page-title">Messages</h1>
+      <p class="page-subtitle">Your conversation with Nicholas at Neuraivex.</p>
+    </div>
+
+    <div class="card" style="max-width:760px;">
+      <div class="message-thread" id="thread">
+
+        <div class="message-bubble from-admin">
+          <div class="bubble-body">Hey Jordan, welcome to your client portal! This is where we'll stay in sync throughout the project. Feel free to message me here anytime.</div>
+          <div class="bubble-meta">Nicholas · Feb 15, 10:02 AM</div>
+        </div>
+
+        <div class="message-bubble from-client">
+          <div class="bubble-body">This looks awesome. Really clean. Looking forward to seeing the designs!</div>
+          <div class="bubble-meta">You · Feb 15, 10:18 AM</div>
+        </div>
+
+        <div class="message-bubble from-admin">
+          <div class="bubble-body">Design phase is complete — I've attached the mockups for your review. Let me know if you want any changes before we start building. I kept the dark theme you mentioned liking.</div>
+          <div class="bubble-meta">Nicholas · Mar 14, 4:32 PM</div>
+        </div>
+
+        <div class="message-bubble from-client">
+          <div class="bubble-body">Love it! Only one thing — can we make the hero headline a bit bigger on mobile? Otherwise looks great, let's go ahead.</div>
+          <div class="bubble-meta">You · Mar 14, 5:47 PM</div>
+        </div>
+
+        <div class="message-bubble from-admin">
+          <div class="bubble-body">Done — headline is now 10% larger on mobile. Build phase is underway. The automation is about 80% done. Just need your HubSpot API key to finish wiring it up. Can you submit that in the <a href="keys.html" style="color:var(--accent-blue);">API Keys section</a>?</div>
+          <div class="bubble-meta">Nicholas · Today, 9:14 AM · <span style="color:var(--accent-blue);">Unread</span></div>
+        </div>
+
+        <div class="message-bubble from-admin">
+          <div class="bubble-body">Also — your Invoice #3 for the Build phase is now up. Due Apr 1. You can view and pay it in the <a href="invoices.html" style="color:var(--accent-blue);">Invoices section</a>.</div>
+          <div class="bubble-meta">Nicholas · Today, 9:16 AM · <span style="color:var(--accent-blue);">Unread</span></div>
+        </div>
+
+      </div>
+
+      <div class="message-input-area">
+        <textarea class="message-input" id="msgInput" placeholder="Type a message..." rows="2" onkeydown="handleKey(event)"></textarea>
+        <button class="btn-primary" onclick="sendMessage()" style="padding:12px 18px; flex-shrink:0;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  if (!sessionStorage.getItem('portal_user')) window.location.href = 'login.html';
+
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  }
+
+  function sendMessage() {
+    const input = document.getElementById('msgInput');
+    const text = input.value.trim();
+    if (!text) return;
+    const thread = document.getElementById('thread');
+    const now = new Date();
+    const time = now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    const bubble = document.createElement('div');
+    bubble.className = 'message-bubble from-client';
+    bubble.innerHTML = `<div class="bubble-body">${text}</div><div class="bubble-meta">You · Today, ${time}</div>`;
+    thread.appendChild(bubble);
+    input.value = '';
+    thread.scrollTop = thread.scrollHeight;
+    setTimeout(() => {
+      const reply = document.createElement('div');
+      reply.className = 'message-bubble from-admin';
+      reply.innerHTML = `<div class="bubble-body">Got it, I'll get back to you shortly!</div><div class="bubble-meta">Nicholas · Just now</div>`;
+      thread.appendChild(reply);
+      thread.scrollTop = thread.scrollHeight;
+    }, 1200);
+  }
+
+  document.getElementById('thread').scrollTop = 99999;
+</script>
+</body>
+</html>

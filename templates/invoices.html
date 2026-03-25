@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Invoices — Neuraivex Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="label" style="margin-bottom:8px;">Billing</div>
+  <h1 class="page-title">Invoices</h1>
+  <p class="page-subtitle">Your billing history with Neuraivex.</p>
+</div>
+
+<!-- Summary -->
+<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px;">
+  <div class="stat-card">
+    <div class="label" style="margin-bottom:10px;">Total Paid</div>
+    <div class="stat-value" style="color:var(--success);">${{ '{:,.0f}'.format(total_paid) }}</div>
+    <div class="stat-delta" style="color:var(--text-muted);">{{ invoices | selectattr('status','eq','paid') | list | length }} invoice(s)</div>
+  </div>
+  <div class="stat-card card-accent">
+    <div class="label" style="margin-bottom:10px;">Outstanding</div>
+    <div class="stat-value" style="color:var(--warning);">${{ '{:,.0f}'.format(total_unpaid) }}</div>
+    {% if next_due %}<div class="stat-delta" style="color:var(--warning);">Due {{ next_due|strfdate('%b %-d, %Y') }}</div>
+    {% else %}<div class="stat-delta" style="color:var(--success);">All paid up</div>{% endif %}
+  </div>
+  <div class="stat-card">
+    <div class="label" style="margin-bottom:10px;">Total Invoiced</div>
+    <div class="stat-value">${{ '{:,.0f}'.format(total_invoiced) }}</div>
+    <div class="stat-delta" style="color:var(--text-muted);">{{ invoices | length }} invoice(s)</div>
+  </div>
+</div>
+
+<!-- Invoice Table -->
+<div class="card">
+  {% if invoices %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Invoice #</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Due</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inv in invoices %}
+        <tr>
+          <td class="td-primary">{{ inv.invoice_number }}</td>
+          <td>{{ inv.description }}</td>
+          <td>{{ inv.date|strfdate('%b %-d, %Y') }}</td>
+          <td>{{ inv.due_date|strfdate('%b %-d, %Y') }}</td>
+          <td class="td-primary">${{ '{:,.0f}'.format(inv.amount) }}</td>
+          <td>
+            {% if inv.status == 'paid' %}<span class="pill pill-success">Paid</span>
+            {% else %}<span class="pill pill-warning">Unpaid</span>{% endif %}
+          </td>
+          <td>
+            {% if inv.pdf_url %}
+            <a href="{{ inv.pdf_url }}" target="_blank" class="btn-secondary btn-sm">View PDF</a>
+            {% elif inv.status == 'unpaid' %}
+            <button class="btn-secondary btn-sm" onclick="alert('Payment link coming soon.')">Pay Now</button>
+            {% else %}
+            <span class="muted">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p style="font-size:13px; color:var(--text-muted); padding:20px 0;">No invoices yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

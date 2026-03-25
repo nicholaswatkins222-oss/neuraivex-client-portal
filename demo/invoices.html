@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invoices — Neuraivex Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+<div class="portal-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header"><a href="dashboard.html" class="logo">NEURAIVE<span class="logo-x-wrap"><span class="logo-x">X</span><span class="logo-node"></span></span></a></div>
+    <div class="sidebar-client-info"><div class="sidebar-client-name">Jordan Rivera</div><div class="sidebar-client-company">Apex Marketing Co.</div></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <a href="project.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Project Status</a>
+      <a href="leads.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Lead Gen</a>
+      <a href="invoices.html" class="nav-item active"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Invoices</a>
+      <a href="messages.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messages<span class="nav-badge">2</span></a>
+      <a href="keys.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>API Keys</a>
+    </nav>
+    <div class="sidebar-footer"><a href="login.html" class="logout-btn" onclick="sessionStorage.clear()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</a></div>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div class="label" style="margin-bottom:8px;">Billing</div>
+      <h1 class="page-title">Invoices</h1>
+      <p class="page-subtitle">Your billing history with Neuraivex.</p>
+    </div>
+
+    <!-- Summary -->
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:28px;">
+      <div class="stat-card">
+        <div class="label" style="margin-bottom:10px;">Total Paid</div>
+        <div class="stat-value" style="color:var(--success);">$3,500</div>
+        <div class="stat-delta" style="color:var(--text-muted);">2 invoices</div>
+      </div>
+      <div class="stat-card card-accent">
+        <div class="label" style="margin-bottom:10px;">Outstanding</div>
+        <div class="stat-value" style="color:var(--warning);">$1,800</div>
+        <div class="stat-delta" style="color:var(--warning);">Due Apr 1, 2026</div>
+      </div>
+      <div class="stat-card">
+        <div class="label" style="margin-bottom:10px;">Total Invoiced</div>
+        <div class="stat-value">$5,300</div>
+        <div class="stat-delta" style="color:var(--text-muted);">3 invoices total</div>
+      </div>
+    </div>
+
+    <!-- Invoice Table -->
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Invoice #</th>
+              <th>Description</th>
+              <th>Date</th>
+              <th>Due</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-primary">INV-003</td>
+              <td>Build Phase — Website + Automation</td>
+              <td>Mar 15, 2026</td>
+              <td>Apr 1, 2026</td>
+              <td class="td-primary">$1,800</td>
+              <td><span class="pill pill-warning">Unpaid</span></td>
+              <td><a href="#" class="btn-secondary btn-sm" onclick="alert('Payment link coming in full build')">Pay Now</a></td>
+            </tr>
+            <tr>
+              <td class="td-primary">INV-002</td>
+              <td>Design Phase — Mockups &amp; System</td>
+              <td>Mar 1, 2026</td>
+              <td>Mar 8, 2026</td>
+              <td class="td-primary">$2,000</td>
+              <td><span class="pill pill-success">Paid</span></td>
+              <td><a href="#" class="btn-secondary btn-sm">View PDF</a></td>
+            </tr>
+            <tr>
+              <td class="td-primary">INV-001</td>
+              <td>Discovery &amp; Strategy Session</td>
+              <td>Feb 15, 2026</td>
+              <td>Feb 22, 2026</td>
+              <td class="td-primary">$1,500</td>
+              <td><span class="pill pill-success">Paid</span></td>
+              <td><a href="#" class="btn-secondary btn-sm">View PDF</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<script>if (!sessionStorage.getItem('portal_user')) window.location.href = 'login.html';</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Messages — Neuraivex Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="label" style="margin-bottom:8px;">Direct Line</div>
+  <h1 class="page-title">Messages</h1>
+  <p class="page-subtitle">Your conversation with {{ admin_user.name if admin_user else 'Nicholas' }} at Neuraivex.</p>
+</div>
+
+<div class="card" style="max-width:760px;">
+  <div class="message-thread" id="thread">
+    {% if thread %}
+      {% for msg in thread %}
+      <div class="message-bubble {% if msg.sender_id == current_user.id %}from-client{% else %}from-admin{% endif %}">
+        <div class="bubble-body">{{ msg.body }}</div>
+        <div class="bubble-meta">
+          {% if msg.sender_id == current_user.id %}You
+          {% elif admin_user %}{{ admin_user.name }}{% else %}Admin{% endif %}
+          · {{ msg.created_at|strfdate('%b %-d, %-I:%M %p') }}
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div style="text-align:center; padding:40px 20px; color:var(--text-muted); font-size:13px;">
+        No messages yet. Send Nicholas a message below to get started.
+      </div>
+    {% endif %}
+  </div>
+
+  <form method="POST" action="{{ url_for('messages.send') }}" id="msgForm">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <div class="message-input-area">
+      <textarea class="message-input" name="body" id="msgInput" placeholder="Type a message..." rows="2" onkeydown="handleKey(event)"></textarea>
+      <button type="submit" class="btn-primary" style="padding:12px 18px; flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function handleKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      document.getElementById('msgForm').submit();
+    }
+  }
+  // Scroll to bottom of thread
+  const thread = document.getElementById('thread');
+  if (thread) thread.scrollTop = thread.scrollHeight;
+</script>
+{% endblock %}

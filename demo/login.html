@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — Neuraivex Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+  <div class="login-glow"></div>
+  <div class="login-page">
+    <div class="login-card card-accent">
+      <div style="text-align:center; margin-bottom:28px;">
+        <a href="#" class="logo" style="justify-content:center; margin-bottom:20px; display:flex;">
+          NEURAIVE<span class="logo-x-wrap"><span class="logo-x">X</span><span class="logo-node"></span></span>
+        </a>
+        <p style="font-size:13px; color:var(--text-muted);">Client Portal</p>
+      </div>
+
+      <div class="demo-creds">
+        <div style="font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent-blue); margin-bottom:8px; font-weight:600;">Demo Credentials</div>
+        <div class="cred-row"><span class="cred-key">Client email</span><span class="cred-val">jordan@apexmarketing.co</span></div>
+        <div class="cred-row"><span class="cred-key">Password</span><span class="cred-val">demo123</span></div>
+        <div style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(56,196,240,0.1);">
+        <div class="cred-row"><span class="cred-key">Admin email</span><span class="cred-val">admin@neuraivex.com</span></div>
+        <div class="cred-row"><span class="cred-key">Password</span><span class="cred-val">admin123</span></div>
+        </div>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="email" placeholder="you@company.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input class="form-input" type="password" id="password" placeholder="••••••••" />
+        </div>
+        <div id="loginError" style="display:none; color:var(--danger); font-size:12px; margin-bottom:12px; font-family:'Space Grotesk',sans-serif;">Invalid email or password.</div>
+        <button type="submit" class="btn-primary" style="width:100%; text-align:center; padding:13px;">Sign In →</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const pass  = document.getElementById('password').value;
+      const err   = document.getElementById('loginError');
+
+      if (email === 'jordan@apexmarketing.co' && pass === 'demo123') {
+        sessionStorage.setItem('portal_user', 'client');
+        window.location.href = 'dashboard.html';
+      } else if (email === 'admin@neuraivex.com' && pass === 'admin123') {
+        sessionStorage.setItem('portal_user', 'admin');
+        window.location.href = 'dashboard.html';
+      } else {
+        err.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

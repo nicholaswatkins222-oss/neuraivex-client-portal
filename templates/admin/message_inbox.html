@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Messages — Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="label" style="margin-bottom:8px;">Admin Panel</div>
+  <h1 class="page-title">Messages</h1>
+  <p class="page-subtitle">Client conversations.</p>
+</div>
+
+<div style="display:grid; grid-template-columns:280px 1fr; gap:20px; align-items:start;">
+
+  <!-- Thread List -->
+  <div class="card" style="padding:0;">
+    <div style="padding:16px 20px; border-bottom:1px solid var(--border);">
+      <div class="card-title">Conversations</div>
+    </div>
+    {% if threads %}
+      {% for t in threads %}
+      <a href="{{ url_for('admin.message_thread', client_id=t.client.id) }}"
+        style="display:block; padding:14px 20px; border-bottom:1px solid rgba(36,48,88,0.4); text-decoration:none;
+          {% if active_client is defined and active_client and active_client.id == t.client.id %}background:rgba(56,196,240,0.06);{% endif %}
+          transition:background 150ms;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:3px;">
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:13px; font-weight:600; color:var(--text-primary);">{{ t.client.name }}</div>
+          {% if t.unread %}<span class="nav-badge">{{ t.unread }}</span>{% endif %}
+        </div>
+        <div style="font-size:11px; color:var(--text-muted);">{{ t.client.company or t.client.email }}</div>
+        {% if t.last_msg %}
+        <div style="font-size:11px; color:var(--text-secondary); margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+          {{ t.last_msg.body[:50] }}{% if t.last_msg.body|length > 50 %}…{% endif %}
+        </div>
+        {% endif %}
+      </a>
+      {% endfor %}
+    {% else %}
+      <div style="padding:20px; font-size:13px; color:var(--text-muted);">No clients yet.</div>
+    {% endif %}
+  </div>
+
+  <!-- Active Thread -->
+  <div>
+    {% if active_client is defined and active_client %}
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div>
+          <div class="card-title">{{ active_client.name }}</div>
+          <div style="font-size:12px; color:var(--text-muted);">{{ active_client.company or active_client.email }}</div>
+        </div>
+        <a href="{{ url_for('admin.client_detail', client_id=active_client.id) }}" class="btn-secondary btn-sm">View Profile</a>
+      </div>
+
+      <div class="message-thread" id="thread">
+        {% if thread %}
+          {% for msg in thread %}
+          <div class="message-bubble {% if msg.sender_id == current_user.id %}from-admin{% else %}from-client{% endif %}">
+            <div class="bubble-body">{{ msg.body }}</div>
+            <div class="bubble-meta">
+              {% if msg.sender_id == current_user.id %}{{ current_user.name }} (you)
+              {% else %}{{ active_client.name }}{% endif %}
+              · {{ msg.created_at|strfdate('%b %-d, %-I:%M %p') }}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div style="text-align:center; padding:40px 20px; color:var(--text-muted); font-size:13px;">No messages yet with this client.</div>
+        {% endif %}
+      </div>
+
+      <form method="POST" action="{{ url_for('admin.message_send') }}" id="msgForm">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <input type="hidden" name="client_id" value="{{ active_client.id }}" />
+        <div class="message-input-area">
+          <textarea class="message-input" name="body" id="msgInput" placeholder="Type a message to {{ active_client.name }}..." rows="2" onkeydown="handleKey(event)"></textarea>
+          <button type="submit" class="btn-primary" style="padding:12px 18px; flex-shrink:0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+    {% else %}
+    <div class="card" style="text-align:center; padding:60px 24px;">
+      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 16px; display:block;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <p style="font-size:14px; color:var(--text-muted);">Select a client from the left to view their conversation.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    document.getElementById('msgForm').submit();
+  }
+}
+const thread = document.getElementById('thread');
+if (thread) thread.scrollTop = thread.scrollHeight;
+</script>
+{% endblock %}

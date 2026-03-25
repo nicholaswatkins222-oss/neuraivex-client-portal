@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Status — Neuraivex Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+<div class="portal-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header"><a href="dashboard.html" class="logo">NEURAIVE<span class="logo-x-wrap"><span class="logo-x">X</span><span class="logo-node"></span></span></a></div>
+    <div class="sidebar-client-info"><div class="sidebar-client-name">Jordan Rivera</div><div class="sidebar-client-company">Apex Marketing Co.</div></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <a href="project.html" class="nav-item active"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Project Status</a>
+      <a href="leads.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Lead Gen</a>
+      <a href="invoices.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Invoices</a>
+      <a href="messages.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messages<span class="nav-badge">2</span></a>
+      <a href="keys.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>API Keys</a>
+    </nav>
+    <div class="sidebar-footer"><a href="login.html" class="logout-btn" onclick="sessionStorage.clear()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</a></div>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div class="label" style="margin-bottom:8px;">Apex Marketing Co.</div>
+      <h1 class="page-title">Project Status</h1>
+      <p class="page-subtitle">Website Redesign + Lead Gen Automation</p>
+    </div>
+
+    <!-- Phase Stepper -->
+    <div class="card" style="margin-bottom:28px; padding:32px;">
+      <div class="phase-stepper">
+        <div class="phase-step done">
+          <div class="phase-dot">✓</div>
+          <div class="phase-label">Discovery</div>
+        </div>
+        <div class="phase-step done">
+          <div class="phase-dot">✓</div>
+          <div class="phase-label">Design</div>
+        </div>
+        <div class="phase-step active">
+          <div class="phase-dot" style="animation: pulse-ring 2s infinite;">●</div>
+          <div class="phase-label">Build</div>
+        </div>
+        <div class="phase-step">
+          <div class="phase-dot">4</div>
+          <div class="phase-label">Review</div>
+        </div>
+        <div class="phase-step">
+          <div class="phase-dot">5</div>
+          <div class="phase-label">Live</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase Cards -->
+    <div class="phase-cards">
+
+      <div class="phase-card done-phase">
+        <div class="phase-card-header">
+          <div class="phase-card-title">Phase 1 — Discovery</div>
+          <span class="pill pill-success">Completed Mar 3</span>
+        </div>
+        <div class="phase-card-body">Intake call completed. Business goals, ICP, and technical requirements documented. Competitor audit done. Sitemap approved.</div>
+        <button class="phase-feedback-btn" onclick="toggleFeedback('f1')">+ Leave Feedback</button>
+        <div class="feedback-form" id="f1">
+          <textarea class="feedback-textarea" placeholder="Your feedback on this phase..."></textarea>
+          <button class="btn-primary btn-sm" onclick="submitFeedback('f1')">Submit</button>
+        </div>
+      </div>
+
+      <div class="phase-card done-phase">
+        <div class="phase-card-header">
+          <div class="phase-card-title">Phase 2 — Design</div>
+          <span class="pill pill-success">Completed Mar 14</span>
+        </div>
+        <div class="phase-card-body">Homepage, services, and contact page mockups delivered. Design system finalized (colors, fonts, components). Client approved all mockups with minor copy tweaks.</div>
+        <div style="margin-top:8px; padding:10px 14px; background:rgba(45,212,160,0.05); border:1px solid rgba(45,212,160,0.15); border-radius:8px; font-size:12px; color:var(--text-muted); font-family:'Space Grotesk',sans-serif;">
+          <span style="color:var(--success); font-weight:600;">Your feedback:</span> "Love the dark theme. Can we make the headline slightly bigger on mobile?" ✓ Applied
+        </div>
+      </div>
+
+      <div class="phase-card active-phase">
+        <div class="phase-card-header">
+          <div class="phase-card-title" style="color:var(--accent-blue);">Phase 3 — Build</div>
+          <span class="pill pill-blue">In Progress</span>
+        </div>
+        <div class="phase-card-body">Building out all pages based on approved designs. Wiring up the lead gen automation (HubSpot → Slack alert + CRM entry). Contact form with instant notification in progress.</div>
+        <div style="margin-top:12px; display:flex; flex-direction:column; gap:6px;">
+          <div style="display:flex; align-items:center; gap:8px; font-size:12px; font-family:'Space Grotesk',sans-serif;">
+            <span style="color:var(--success);">✓</span> <span style="color:var(--text-secondary);">Homepage built</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; font-size:12px; font-family:'Space Grotesk',sans-serif;">
+            <span style="color:var(--success);">✓</span> <span style="color:var(--text-secondary);">Services page built</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; font-size:12px; font-family:'Space Grotesk',sans-serif;">
+            <span style="color:var(--accent-blue);">⟳</span> <span style="color:var(--text-secondary);">Contact form + automation — in progress</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px; font-size:12px; font-family:'Space Grotesk',sans-serif; opacity:0.5;">
+            <span style="color:var(--text-muted);">○</span> <span style="color:var(--text-muted);">SEO meta tags + sitemap</span>
+          </div>
+        </div>
+        <div style="margin-top:14px;">
+          <button class="phase-feedback-btn" onclick="toggleFeedback('f3')">+ Leave Feedback</button>
+          <div class="feedback-form" id="f3">
+            <textarea class="feedback-textarea" placeholder="Questions or notes about this phase..."></textarea>
+            <button class="btn-primary btn-sm" onclick="submitFeedback('f3')">Submit</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card" style="opacity:0.4;">
+        <div class="phase-card-header">
+          <div class="phase-card-title">Phase 4 — Review</div>
+          <span class="pill pill-muted">Pending</span>
+        </div>
+        <div class="phase-card-body">Full site walkthrough, QA testing, and client approval before going live.</div>
+      </div>
+
+      <div class="phase-card" style="opacity:0.4;">
+        <div class="phase-card-header">
+          <div class="phase-card-title">Phase 5 — Live</div>
+          <span class="pill pill-muted">Pending</span>
+        </div>
+        <div class="phase-card-body">Domain pointing, final deployment, and handoff documentation delivered.</div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<style>
+@keyframes pulse-ring {
+  0%, 100% { opacity:1; }
+  50% { opacity:0.5; }
+}
+</style>
+
+<script>
+  if (!sessionStorage.getItem('portal_user')) window.location.href = 'login.html';
+  function toggleFeedback(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('open');
+  }
+  function submitFeedback(id) {
+    const form = document.getElementById(id);
+    const ta = form.querySelector('textarea');
+    if (!ta.value.trim()) return;
+    form.innerHTML = '<div style="font-size:12px;color:var(--success);font-family:\'Space Grotesk\',sans-serif;padding:8px 0;">✓ Feedback submitted — Nicholas will see this shortly.</div>';
+  }
+</script>
+</body>
+</html>

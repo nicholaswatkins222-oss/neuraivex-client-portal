@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Clients — Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="label" style="margin-bottom:8px;">Admin Panel</div>
+  <h1 class="page-title">All Clients</h1>
+  <p class="page-subtitle">Manage all client accounts and their projects.</p>
+</div>
+
+<div class="card">
+  {% if clients %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Company</th>
+          <th>Joined</th>
+          <th>Last Login</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for client in clients %}
+        <tr>
+          <td class="td-primary">{{ client.name }}</td>
+          <td>{{ client.email }}</td>
+          <td>{{ client.company or '—' }}</td>
+          <td>{{ client.created_at|strfdate('%b %-d, %Y') }}</td>
+          <td>{{ client.last_login|strfdate('%b %-d, %-I:%M %p') if client.last_login else 'Never' }}</td>
+          <td><a href="{{ url_for('admin.client_detail', client_id=client.id) }}" class="btn-secondary btn-sm">View</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p style="font-size:13px; color:var(--text-muted);">No clients yet. Seed the database to add demo data.</p>
+  {% endif %}
+</div>
+{% endblock %}

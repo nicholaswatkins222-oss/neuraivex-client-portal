@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Edit Project — Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="label" style="margin-bottom:8px;"><a href="{{ url_for('admin.client_detail', client_id=project.client_id) }}" style="color:var(--accent-blue); text-decoration:none;">← Client Detail</a></div>
+  <h1 class="page-title">Edit Project</h1>
+  <p class="page-subtitle">{{ project.name }}</p>
+</div>
+
+<div class="card" style="max-width:760px;">
+  <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+    {% for phase in phases %}
+    <div style="padding:20px 0; border-bottom:1px solid var(--border);" {% if loop.last %}style="padding:20px 0; border-bottom:none;"{% endif %}>
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+        <div>
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600;">Phase {{ loop.index }} — {{ phase.name }}</div>
+          {% if phase.completed_at %}
+          <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Completed {{ phase.completed_at|strfdate('%b %-d, %Y') }}</div>
+          {% endif %}
+        </div>
+        <select name="status_{{ phase.id }}" class="form-input" style="width:auto; padding:6px 12px; font-size:13px;">
+          <option value="pending" {% if phase.status == 'pending' %}selected{% endif %}>Pending</option>
+          <option value="active" {% if phase.status == 'active' %}selected{% endif %}>Active</option>
+          <option value="done" {% if phase.status == 'done' %}selected{% endif %}>Done</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label class="form-label">Phase Note (shown to client)</label>
+        <textarea class="feedback-textarea" name="note_{{ phase.id }}" placeholder="Describe what's happening in this phase..." style="min-height:70px;">{{ phase.note or '' }}</textarea>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div style="margin-top:24px; display:flex; gap:12px;">
+      <button type="submit" class="btn-primary">Save Changes</button>
+      <a href="{{ url_for('admin.client_detail', client_id=project.client_id) }}" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

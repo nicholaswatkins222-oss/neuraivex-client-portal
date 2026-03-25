@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Keys — Neuraivex Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+<div class="portal-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header"><a href="dashboard.html" class="logo">NEURAIVE<span class="logo-x-wrap"><span class="logo-x">X</span><span class="logo-node"></span></span></a></div>
+    <div class="sidebar-client-info"><div class="sidebar-client-name">Jordan Rivera</div><div class="sidebar-client-company">Apex Marketing Co.</div></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>Dashboard</a>
+      <a href="project.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Project Status</a>
+      <a href="leads.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Lead Gen</a>
+      <a href="invoices.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Invoices</a>
+      <a href="messages.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Messages<span class="nav-badge">2</span></a>
+      <a href="keys.html" class="nav-item active"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>API Keys</a>
+    </nav>
+    <div class="sidebar-footer"><a href="login.html" class="logout-btn" onclick="sessionStorage.clear()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</a></div>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div class="label" style="margin-bottom:8px;">Secure Vault</div>
+      <h1 class="page-title">API Keys</h1>
+      <p class="page-subtitle">Submit your API keys securely. Keys are encrypted and only accessible by Neuraivex to build your automations.</p>
+    </div>
+
+    <!-- Security notice -->
+    <div style="background:rgba(56,196,240,0.05); border:1px solid rgba(56,196,240,0.15); border-radius:10px; padding:14px 18px; margin-bottom:24px; display:flex; align-items:center; gap:12px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38C4F0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <p style="font-size:13px; color:var(--text-secondary);">Keys are encrypted with AES-256 before storage. Once submitted, you cannot view the key again — only delete and resubmit. Neuraivex staff access keys only to configure your automations.</p>
+    </div>
+
+    <div class="grid-2">
+      <!-- Submit New Key -->
+      <div class="card card-accent">
+        <div class="card-title" style="margin-bottom:20px;">Submit a Key</div>
+        <form id="keyForm">
+          <div class="form-group">
+            <label class="form-label">Service Name</label>
+            <input class="form-input" type="text" id="serviceName" placeholder="e.g. HubSpot, OpenAI, Zapier..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">API Key</label>
+            <input class="form-input" type="password" id="apiKey" placeholder="Paste your key here..." autocomplete="off" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Note (optional)</label>
+            <input class="form-input" type="text" id="keyNote" placeholder="e.g. Read-only, Production account..." />
+          </div>
+          <button type="submit" class="btn-primary" style="width:100%; text-align:center;">Submit Key Securely</button>
+        </form>
+        <div id="keySuccess" style="display:none; margin-top:14px; padding:12px 16px; background:rgba(45,212,160,0.08); border:1px solid rgba(45,212,160,0.2); border-radius:8px; font-size:13px; color:var(--success); font-family:'Space Grotesk',sans-serif;">
+          ✓ Key submitted and encrypted successfully.
+        </div>
+      </div>
+
+      <!-- Submitted Keys -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom:4px;">Submitted Keys</div>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Key values are never shown after submission.</p>
+        <div id="keyList">
+          <div class="key-row">
+            <div>
+              <div class="key-service">OpenAI</div>
+              <div class="key-masked">sk-••••••••••••••••••••••••3f9a</div>
+              <div style="font-size:11px; color:var(--text-muted); margin-top:2px; font-family:'Space Grotesk',sans-serif;">Submitted Mar 10 · Production account</div>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <span class="pill pill-success" style="font-size:10px;">Active</span>
+              <button class="btn-secondary btn-sm" style="color:var(--danger); border-color:rgba(240,88,88,0.2);" onclick="deleteKey(this)">Delete</button>
+            </div>
+          </div>
+          <div class="key-row">
+            <div>
+              <div class="key-service">HubSpot</div>
+              <div class="key-masked">••••••••••••••  Pending submission</div>
+              <div style="font-size:11px; color:var(--warning); margin-top:2px; font-family:'Space Grotesk',sans-serif;">⚠ Required for automation — please submit</div>
+            </div>
+            <div>
+              <span class="pill pill-warning" style="font-size:10px;">Needed</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  if (!sessionStorage.getItem('portal_user')) window.location.href = 'login.html';
+
+  document.getElementById('keyForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = document.getElementById('serviceName').value.trim();
+    const key  = document.getElementById('apiKey').value.trim();
+    if (!name || !key) return;
+
+    // Show success
+    document.getElementById('keySuccess').style.display = 'block';
+    this.reset();
+
+    // Add to list
+    const masked = key.slice(-4).padStart(key.length, '•');
+    const list = document.getElementById('keyList');
+    const row = document.createElement('div');
+    row.className = 'key-row';
+    row.innerHTML = `
+      <div>
+        <div class="key-service">${name}</div>
+        <div class="key-masked">${masked}</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;font-family:'Space Grotesk',sans-serif;">Submitted just now</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span class="pill pill-success" style="font-size:10px;">Active</span>
+        <button class="btn-secondary btn-sm" style="color:var(--danger);border-color:rgba(240,88,88,0.2);" onclick="deleteKey(this)">Delete</button>
+      </div>`;
+    list.appendChild(row);
+
+    setTimeout(() => document.getElementById('keySuccess').style.display = 'none', 3000);
+  });
+
+  function deleteKey(btn) {
+    if (confirm('Delete this key? It cannot be recovered.')) {
+      btn.closest('.key-row').remove();
+    }
+  }
+</script>
+</body>
+</html>

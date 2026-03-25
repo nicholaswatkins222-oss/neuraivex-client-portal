@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block title %}Lead Gen — Neuraivex Portal{% endblock %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
+  <div>
+    <div class="label" style="margin-bottom:8px;">Automation Results</div>
+    <h1 class="page-title">Lead Generation</h1>
+    <p class="page-subtitle">Leads captured via your website and automation funnels.</p>
+  </div>
+</div>
+
+<!-- Stats -->
+<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:24px;">
+  <div class="stat-card card-accent">
+    <div class="label" style="margin-bottom:10px;">This Month</div>
+    <div class="stat-value gradient-text">{{ leads_this_month }}</div>
+    <div class="stat-delta" style="color:var(--text-muted);">Calendar month</div>
+  </div>
+  <div class="stat-card">
+    <div class="label" style="margin-bottom:10px;">Total All Time</div>
+    <div class="stat-value">{{ total_leads }}</div>
+    <div class="stat-delta" style="color:var(--text-muted);">All captured leads</div>
+  </div>
+  <div class="stat-card">
+    <div class="label" style="margin-bottom:10px;">Conversion Rate</div>
+    <div class="stat-value" style="color:var(--success);">{{ conversion_rate }}%</div>
+    <div class="stat-delta" style="color:var(--text-muted);">Leads → Converted</div>
+  </div>
+</div>
+
+<!-- Chart -->
+<div class="card" style="margin-bottom:24px;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <div class="card-title">Leads Per Week</div>
+  </div>
+  <div class="chart-wrap">
+    <canvas id="leadsChart"></canvas>
+  </div>
+</div>
+
+<!-- Table -->
+<div class="card">
+  <div class="card-title" style="margin-bottom:16px;">All Leads</div>
+  {% if leads %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Source</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for lead in leads %}
+        <tr>
+          <td class="td-primary">{{ lead.name }}</td>
+          <td>{{ lead.email or '—' }}</td>
+          <td>{{ lead.phone or '—' }}</td>
+          <td>{{ lead.source or '—' }}</td>
+          <td>{{ lead.created_at|strfdate('%b %-d') }}</td>
+          <td>
+            {% if lead.status == 'converted' %}<span class="pill pill-success">Converted</span>
+            {% elif lead.status == 'contacted' %}<span class="pill pill-blue">Contacted</span>
+            {% elif lead.status == 'no_response' %}<span class="pill pill-muted">No Response</span>
+            {% else %}<span class="pill pill-warning">New</span>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p style="font-size:13px; color:var(--text-muted); padding:20px 0;">No leads yet. Once your automation is live, leads will appear here.</p>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  fetch('{{ url_for("leads.chart_data") }}')
+    .then(r => r.json())
+    .then(d => {
+      const ctx = document.getElementById('leadsChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: d.labels,
+          datasets: [{
+            label: 'Leads',
+            data: d.data,
+            backgroundColor: 'rgba(56,196,240,0.15)',
+            borderColor: '#38C4F0',
+            borderWidth: 1.5,
+            borderRadius: 6,
+            hoverBackgroundColor: 'rgba(56,196,240,0.28)',
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#1A2545',
+              borderColor: '#243058',
+              borderWidth: 1,
+              titleColor: '#FFFFFF',
+              bodyColor: '#8A9BC0',
+              titleFont: { family: 'Space Grotesk', weight: '600' },
+              callbacks: { label: ctx => ` ${ctx.raw} leads` }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(36,48,88,0.5)', drawBorder: false },
+              ticks: { color: '#4A5878', font: { family: 'Space Grotesk', size: 11 } }
+            },
+            y: {
+              grid: { color: 'rgba(36,48,88,0.5)', drawBorder: false },
+              ticks: { color: '#4A5878', font: { family: 'Space Grotesk', size: 11 }, stepSize: 2 },
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    });
+</script>
+{% endblock %}

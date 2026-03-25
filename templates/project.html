@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}Project Status — Neuraivex Portal{% endblock %}
+
+{% block head %}
+<style>
+@keyframes pulse-ring {
+  0%, 100% { opacity:1; }
+  50% { opacity:0.5; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="label" style="margin-bottom:8px;">{{ current_user.company or current_user.name }}</div>
+  <h1 class="page-title">Project Status</h1>
+  <p class="page-subtitle">{{ project.name if project else 'No project assigned yet.' }}</p>
+</div>
+
+{% if not project %}
+<div class="card">
+  <p style="font-size:14px; color:var(--text-muted);">Your project hasn't been set up yet. Nicholas will configure this for you once the project begins.</p>
+</div>
+{% else %}
+
+<!-- Phase Stepper -->
+<div class="card" style="margin-bottom:28px; padding:32px;">
+  <div class="phase-stepper">
+    {% for phase in phases %}
+    <div class="phase-step {{ phase.status }}">
+      <div class="phase-dot" {% if phase.status == 'active' %}style="animation: pulse-ring 2s infinite;"{% endif %}>
+        {% if phase.status == 'done' %}✓{% else %}{{ loop.index }}{% endif %}
+      </div>
+      <div class="phase-label">{{ phase.name }}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Phase Cards -->
+<div class="phase-cards">
+  {% for phase in phases %}
+  <div class="phase-card {% if phase.status == 'active' %}active-phase{% elif phase.status == 'done' %}done-phase{% endif %}"
+    {% if phase.status == 'pending' %}style="opacity:0.4;"{% endif %}>
+    <div class="phase-card-header">
+      <div class="phase-card-title" {% if phase.status == 'active' %}style="color:var(--accent-blue);"{% endif %}>
+        Phase {{ loop.index }} — {{ phase.name }}
+      </div>
+      {% if phase.status == 'done' %}
+        <span class="pill pill-success">Completed{% if phase.completed_at %} {{ phase.completed_at|strfdate('%b %-d') }}{% endif %}</span>
+      {% elif phase.status == 'active' %}
+        <span class="pill pill-blue">In Progress</span>
+      {% else %}
+        <span class="pill pill-muted">Pending</span>
+      {% endif %}
+    </div>
+
+    {% if phase.note %}
+    <div class="phase-card-body">{{ phase.note }}</div>
+    {% endif %}
+
+    <!-- Existing comments -->
+    {% set phase_comments = phase.comments.all() %}
+    {% if phase_comments %}
+    <div style="margin-top:10px; display:flex; flex-direction:column; gap:8px;">
+      {% for c in phase_comments %}
+      <div style="padding:10px 14px; background:rgba(45,212,160,0.05); border:1px solid rgba(45,212,160,0.15); border-radius:8px; font-size:12px; color:var(--text-muted); font-family:'Space Grotesk',sans-serif;">
+        <span style="color:var(--success); font-weight:600;">Your feedback:</span> "{{ c.body }}"
+        <span style="opacity:0.6; margin-left:8px;">{{ c.created_at|strfdate('%b %-d') }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Feedback form -->
+    {% if phase.status in ('active', 'done') %}
+    <div style="margin-top:14px;">
+      <button class="phase-feedback-btn" onclick="toggleFeedback('f{{ phase.id }}')">+ Leave Feedback</button>
+      <div class="feedback-form" id="f{{ phase.id }}">
+        <form method="POST" action="{{ url_for('project.comment') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <input type="hidden" name="phase_id" value="{{ phase.id }}" />
+          <textarea class="feedback-textarea" name="body" placeholder="Your feedback on this phase..."></textarea>
+          <button type="submit" class="btn-primary btn-sm">Submit</button>
+          <button type="button" class="btn-secondary btn-sm" style="margin-left:8px;" onclick="toggleFeedback('f{{ phase.id }}')">Cancel</button>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleFeedback(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+</script>
+{% endblock %}
