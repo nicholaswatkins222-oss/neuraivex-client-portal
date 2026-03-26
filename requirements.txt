@@ -2,7 +2,9 @@ flask
 flask-sqlalchemy
 flask-login
 flask-wtf
+flask-mail
 bcrypt
 cryptography
+itsdangerous
 gunicorn
 python-dotenv
