@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Client Detail — Neuraivex Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+<div class="portal-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header"><a href="admin.html" class="logo">NEURAIVE<span class="logo-x-wrap"><span class="logo-x">X</span><span class="logo-node"></span></span></a></div>
+    <div class="sidebar-client-info"><div class="sidebar-client-name">Nicholas Watkins</div><div class="sidebar-client-company" style="color:var(--accent-blue);">Admin Panel</div></div>
+    <nav class="sidebar-nav">
+      <a href="admin.html" class="nav-item active"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>All Clients</a>
+      <a href="admin-messages.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Message Inbox<span class="nav-badge">2</span></a>
+      <a href="admin-keys.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>API Key Vault</a>
+    </nav>
+    <div class="sidebar-footer"><a href="login.html" class="logout-btn" onclick="sessionStorage.clear()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</a></div>
+  </aside>
+
+  <main class="main-content">
+    <div style="margin-bottom:20px;"><a href="admin.html" style="font-size:12px; color:var(--text-muted); font-family:'Space Grotesk',sans-serif; text-decoration:none;">← Back to All Clients</a></div>
+    <div class="page-header">
+      <div class="label" style="margin-bottom:8px;">Client Detail</div>
+      <h1 class="page-title">Jordan Rivera</h1>
+      <p class="page-subtitle">Apex Marketing Co. · jordan@apexmarketing.co · Joined Feb 15, 2026</p>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:20px;">
+      <!-- Project Status -->
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div class="card-title">Project Status</div>
+          <a href="admin-project.html" class="btn-secondary btn-sm">Edit Phases</a>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--bg-elevated);border-radius:8px;"><span style="font-size:13px;font-family:'Space Grotesk',sans-serif;font-weight:500;">Discovery</span><span class="pill pill-success">Done</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--bg-elevated);border-radius:8px;"><span style="font-size:13px;font-family:'Space Grotesk',sans-serif;font-weight:500;">Design</span><span class="pill pill-success">Done</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;background:rgba(56,196,240,0.06);border:1px solid rgba(56,196,240,0.2);border-radius:8px;"><span style="font-size:13px;font-family:'Space Grotesk',sans-serif;font-weight:500;color:var(--accent-blue);">Build</span><span class="pill pill-blue">Active</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--bg-elevated);border-radius:8px;opacity:0.5;"><span style="font-size:13px;font-family:'Space Grotesk',sans-serif;font-weight:500;">Review</span><span class="pill pill-muted">Pending</span></div>
+          <div style="display:flex;justify-content:space-between;padding:10px 14px;background:var(--bg-elevated);border-radius:8px;opacity:0.5;"><span style="font-size:13px;font-family:'Space Grotesk',sans-serif;font-weight:500;">Live</span><span class="pill pill-muted">Pending</span></div>
+        </div>
+      </div>
+
+      <!-- Invoices -->
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <div class="card-title">Invoices</div>
+          <button class="btn-secondary btn-sm" onclick="alert('Add invoice in full build')">+ Add Invoice</button>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(240,160,56,0.06);border:1px solid rgba(240,160,56,0.15);border-radius:8px;">
+            <div><div style="font-size:13px;font-family:'Space Grotesk',sans-serif;font-weight:600;">INV-003 · $1,800</div><div style="font-size:11px;color:var(--text-muted);">Build Phase · Due Apr 1</div></div>
+            <span class="pill pill-warning">Unpaid</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-elevated);border-radius:8px;">
+            <div><div style="font-size:13px;font-family:'Space Grotesk',sans-serif;font-weight:600;">INV-002 · $2,000</div><div style="font-size:11px;color:var(--text-muted);">Design Phase · Paid Mar 8</div></div>
+            <span class="pill pill-success">Paid</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg-elevated);border-radius:8px;">
+            <div><div style="font-size:13px;font-family:'Space Grotesk',sans-serif;font-weight:600;">INV-001 · $1,500</div><div style="font-size:11px;color:var(--text-muted);">Discovery · Paid Feb 22</div></div>
+            <span class="pill pill-success">Paid</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Keys (admin view) -->
+    <div class="card" style="margin-bottom:20px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div>
+          <div class="card-title">Submitted API Keys</div>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:3px;">Confirm your password to reveal decrypted values.</p>
+        </div>
+        <a href="admin-keys.html" class="btn-secondary btn-sm">View &amp; Decrypt</a>
+      </div>
+      <div class="key-row">
+        <div><div class="key-service">OpenAI</div><div class="key-masked">sk-••••••••••••••••••••••••3f9a</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">Submitted Mar 10</div></div>
+        <span class="pill pill-success">Active</span>
+      </div>
+      <div class="key-row">
+        <div><div class="key-service">HubSpot</div><div style="font-size:12px;color:var(--warning);margin-top:2px;">⚠ Not yet submitted — needed for automation</div></div>
+        <span class="pill pill-warning">Pending</span>
+      </div>
+    </div>
+
+    <!-- Recent Leads -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+        <div class="card-title">Recent Leads</div>
+        <button class="btn-secondary btn-sm" onclick="alert('Add lead in full build')">+ Add Lead</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Email</th><th>Source</th><th>Date</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="td-primary">Marcus Webb</td><td>marcus@webbco.com</td><td>Contact Form</td><td>Mar 24</td><td><span class="pill pill-success">Converted</span></td></tr>
+            <tr><td class="td-primary">Priya Nair</td><td>priya@nairdesign.io</td><td>Contact Form</td><td>Mar 23</td><td><span class="pill pill-blue">Contacted</span></td></tr>
+            <tr><td class="td-primary">Derek Osei</td><td>derek@oseiconsult.com</td><td>Contact Form</td><td>Mar 22</td><td><span class="pill pill-blue">Contacted</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<script>if (sessionStorage.getItem('portal_user') !== 'admin') window.location.href = 'login.html';</script>
+</body>
+</html>

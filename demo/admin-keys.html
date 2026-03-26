@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Key Vault — Neuraivex Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+<div class="portal-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header"><a href="admin.html" class="logo">NEURAIVE<span class="logo-x-wrap"><span class="logo-x">X</span><span class="logo-node"></span></span></a></div>
+    <div class="sidebar-client-info"><div class="sidebar-client-name">Nicholas Watkins</div><div class="sidebar-client-company" style="color:var(--accent-blue);">Admin Panel</div></div>
+    <nav class="sidebar-nav">
+      <a href="admin.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>All Clients</a>
+      <a href="admin-messages.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Message Inbox<span class="nav-badge">2</span></a>
+      <a href="admin-keys.html" class="nav-item active"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>API Key Vault</a>
+    </nav>
+    <div class="sidebar-footer"><a href="login.html" class="logout-btn" onclick="sessionStorage.clear()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</a></div>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div class="label" style="margin-bottom:8px;">Secure Vault</div>
+      <h1 class="page-title">API Key Vault</h1>
+      <p class="page-subtitle">All client-submitted API keys. Confirm your password to decrypt.</p>
+    </div>
+
+    <!-- Password confirm -->
+    <div class="card card-accent" style="max-width:480px; margin-bottom:28px;" id="authCard">
+      <div class="card-title" style="margin-bottom:4px;">Confirm Your Password</div>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;">Required each time you access decrypted keys.</p>
+      <div style="display:flex;gap:10px;">
+        <input class="form-input" type="password" id="confirmPass" placeholder="Your admin password..." style="flex:1;" />
+        <button class="btn-primary" onclick="confirmAuth()">Unlock</button>
+      </div>
+      <div id="authError" style="display:none;color:var(--danger);font-size:12px;margin-top:8px;font-family:'Space Grotesk',sans-serif;">Incorrect password.</div>
+    </div>
+
+    <!-- Keys table (locked by default) -->
+    <div class="card" id="keysCard" style="filter:blur(4px); pointer-events:none; user-select:none;">
+      <div class="card-title" style="margin-bottom:16px;">Decrypted Keys</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Client</th><th>Service</th><th>Key Value</th><th>Note</th><th>Submitted</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="td-primary">Jordan Rivera</td>
+              <td class="td-primary">OpenAI</td>
+              <td><code style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--accent-blue);background:rgba(56,196,240,0.08);padding:3px 8px;border-radius:4px;">sk-proj-Xk92mNpQr7vLt3aFjY...</code></td>
+              <td style="color:var(--text-muted);">Production account</td>
+              <td>Mar 10</td>
+            </tr>
+            <tr>
+              <td class="td-primary">Mickey Castonguay</td>
+              <td class="td-primary">Twilio</td>
+              <td><code style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--accent-blue);background:rgba(56,196,240,0.08);padding:3px 8px;border-radius:4px;">ACd4f82e19b3c7a6091ff...</code></td>
+              <td style="color:var(--text-muted);">SMS notifications</td>
+              <td>Feb 28</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  if (sessionStorage.getItem('portal_user') !== 'admin') window.location.href = 'login.html';
+  function confirmAuth() {
+    const pass = document.getElementById('confirmPass').value;
+    const err  = document.getElementById('authError');
+    if (pass === 'admin123') {
+      document.getElementById('keysCard').style.filter = 'none';
+      document.getElementById('keysCard').style.pointerEvents = 'auto';
+      document.getElementById('keysCard').style.userSelect = 'auto';
+      document.getElementById('authCard').innerHTML = '<div style="display:flex;align-items:center;gap:10px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2DD4A0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span style="font-family:\'Space Grotesk\',sans-serif;font-size:13px;color:var(--success);font-weight:600;">Vault unlocked — keys decrypted</span></div>';
+    } else {
+      err.style.display = 'block';
+    }
+  }
+  document.getElementById('confirmPass')?.addEventListener('keydown', e => { if (e.key === 'Enter') confirmAuth(); });
+</script>
+</body>
+</html>

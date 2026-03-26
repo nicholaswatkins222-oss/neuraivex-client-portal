@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Project — Neuraivex Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+<div class="portal-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header"><a href="admin.html" class="logo">NEURAIVE<span class="logo-x-wrap"><span class="logo-x">X</span><span class="logo-node"></span></span></a></div>
+    <div class="sidebar-client-info"><div class="sidebar-client-name">Nicholas Watkins</div><div class="sidebar-client-company" style="color:var(--accent-blue);">Admin Panel</div></div>
+    <nav class="sidebar-nav">
+      <a href="admin.html" class="nav-item active"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>All Clients</a>
+      <a href="admin-messages.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Message Inbox<span class="nav-badge">2</span></a>
+      <a href="admin-keys.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>API Key Vault</a>
+    </nav>
+    <div class="sidebar-footer"><a href="login.html" class="logout-btn" onclick="sessionStorage.clear()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</a></div>
+  </aside>
+
+  <main class="main-content">
+    <div style="margin-bottom:20px;"><a href="admin-client.html" style="font-size:12px;color:var(--text-muted);font-family:'Space Grotesk',sans-serif;text-decoration:none;">← Back to Jordan Rivera</a></div>
+    <div class="page-header">
+      <div class="label" style="margin-bottom:8px;">Jordan Rivera · Apex Marketing Co.</div>
+      <h1 class="page-title">Edit Project Phases</h1>
+      <p class="page-subtitle">Move phases forward and add internal notes. Client sees these in real time.</p>
+    </div>
+
+    <div class="phase-cards">
+
+      <div class="phase-card done-phase">
+        <div class="phase-card-header">
+          <div class="phase-card-title">Phase 1 — Discovery</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="pill pill-success">Done</span>
+            <select onchange="updateStatus(this,'phase1')" style="background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-secondary);font-family:'Space Grotesk',sans-serif;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;">
+              <option value="done" selected>Done</option>
+              <option value="active">Active</option>
+              <option value="pending">Pending</option>
+            </select>
+          </div>
+        </div>
+        <div class="phase-card-body">Intake call completed. Business goals, ICP, and technical requirements documented.</div>
+        <div style="margin-top:10px;">
+          <label class="form-label">Internal Note</label>
+          <textarea class="feedback-textarea" placeholder="Add a note visible to the client on this phase..." style="min-height:60px;">Completed on schedule. Client was well-prepared with branding assets.</textarea>
+        </div>
+      </div>
+
+      <div class="phase-card done-phase">
+        <div class="phase-card-header">
+          <div class="phase-card-title">Phase 2 — Design</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="pill pill-success">Done</span>
+            <select onchange="updateStatus(this,'phase2')" style="background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-secondary);font-family:'Space Grotesk',sans-serif;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;">
+              <option value="done" selected>Done</option>
+              <option value="active">Active</option>
+              <option value="pending">Pending</option>
+            </select>
+          </div>
+        </div>
+        <div class="phase-card-body">Mockups delivered and approved. Client requested larger mobile headline — applied.</div>
+        <div style="margin-top:10px;">
+          <label class="form-label">Internal Note</label>
+          <textarea class="feedback-textarea" placeholder="Add a note..." style="min-height:60px;">Client approved all 3 pages. Minor copy tweak on hero applied.</textarea>
+        </div>
+      </div>
+
+      <div class="phase-card active-phase">
+        <div class="phase-card-header">
+          <div class="phase-card-title" style="color:var(--accent-blue);">Phase 3 — Build</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="pill pill-blue">Active</span>
+            <select onchange="updateStatus(this,'phase3')" style="background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-secondary);font-family:'Space Grotesk',sans-serif;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;">
+              <option value="pending">Pending</option>
+              <option value="active" selected>Active</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+        </div>
+        <div class="phase-card-body">Homepage ✓ Services page ✓ — Contact form + HubSpot automation in progress. Waiting on HubSpot API key from client.</div>
+        <div style="margin-top:10px;">
+          <label class="form-label">Internal Note (visible to client)</label>
+          <textarea class="feedback-textarea" placeholder="Add a note..." style="min-height:60px;">Need HubSpot API key to complete automation. Reminded client via messages.</textarea>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card-header">
+          <div class="phase-card-title">Phase 4 — Review</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="pill pill-muted">Pending</span>
+            <select onchange="updateStatus(this,'phase4')" style="background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-secondary);font-family:'Space Grotesk',sans-serif;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;">
+              <option value="pending" selected>Pending</option>
+              <option value="active">Active</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+        </div>
+        <div class="phase-card-body">Full site walkthrough and QA before going live.</div>
+        <div style="margin-top:10px;">
+          <label class="form-label">Internal Note</label>
+          <textarea class="feedback-textarea" placeholder="Add a note..." style="min-height:60px;"></textarea>
+        </div>
+      </div>
+
+      <div class="phase-card">
+        <div class="phase-card-header">
+          <div class="phase-card-title">Phase 5 — Live</div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <span class="pill pill-muted">Pending</span>
+            <select onchange="updateStatus(this,'phase5')" style="background:var(--bg-elevated);border:1px solid var(--border);color:var(--text-secondary);font-family:'Space Grotesk',sans-serif;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer;">
+              <option value="pending" selected>Pending</option>
+              <option value="active">Active</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
+        </div>
+        <div class="phase-card-body">Domain pointing, deployment, and handoff docs.</div>
+        <div style="margin-top:10px;">
+          <label class="form-label">Internal Note</label>
+          <textarea class="feedback-textarea" placeholder="Add a note..." style="min-height:60px;"></textarea>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="margin-top:24px;">
+      <button class="btn-primary" onclick="saveChanges()" style="padding:13px 32px;">Save Changes</button>
+    </div>
+  </main>
+</div>
+
+<script>
+  if (sessionStorage.getItem('portal_user') !== 'admin') window.location.href = 'login.html';
+  function updateStatus(sel, phase) {
+    const card = sel.closest('.phase-card');
+    card.className = 'phase-card ' + (sel.value === 'active' ? 'active-phase' : sel.value === 'done' ? 'done-phase' : '');
+  }
+  function saveChanges() {
+    const btn = event.target;
+    btn.textContent = '✓ Saved';
+    btn.style.background = 'var(--success)';
+    setTimeout(() => { btn.textContent = 'Save Changes'; btn.style.background = ''; }, 2000);
+  }
+</script>
+</body>
+</html>

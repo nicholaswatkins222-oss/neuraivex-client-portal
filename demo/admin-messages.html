@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Message Inbox — Neuraivex Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+<div class="portal-layout">
+  <aside class="sidebar">
+    <div class="sidebar-header"><a href="admin.html" class="logo">NEURAIVE<span class="logo-x-wrap"><span class="logo-x">X</span><span class="logo-node"></span></span></a></div>
+    <div class="sidebar-client-info"><div class="sidebar-client-name">Nicholas Watkins</div><div class="sidebar-client-company" style="color:var(--accent-blue);">Admin Panel</div></div>
+    <nav class="sidebar-nav">
+      <a href="admin.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>All Clients</a>
+      <a href="admin-messages.html" class="nav-item active"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Message Inbox<span class="nav-badge">2</span></a>
+      <a href="admin-keys.html" class="nav-item"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>API Key Vault</a>
+    </nav>
+    <div class="sidebar-footer"><a href="login.html" class="logout-btn" onclick="sessionStorage.clear()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out</a></div>
+  </aside>
+
+  <main class="main-content">
+    <div class="page-header">
+      <div class="label" style="margin-bottom:8px;">Admin</div>
+      <h1 class="page-title">Message Inbox</h1>
+      <p class="page-subtitle">All client conversations in one place.</p>
+    </div>
+
+    <div class="grid-2">
+      <!-- Thread list -->
+      <div class="card" style="padding:0; overflow:hidden;">
+        <div style="padding:16px 20px; border-bottom:1px solid var(--border);">
+          <div class="card-title">Conversations</div>
+        </div>
+        <div>
+          <div onclick="selectThread('jordan')" id="thread-jordan" style="padding:16px 20px; border-bottom:1px solid var(--border); cursor:pointer; background:rgba(56,196,240,0.05); border-left:2px solid var(--accent-blue);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;">Jordan Rivera</div>
+              <span class="nav-badge">2</span>
+            </div>
+            <div style="font-size:12px;color:var(--text-muted);">Apex Marketing Co.</div>
+            <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Also — your Invoice #3 for the Build phase...</div>
+          </div>
+          <div onclick="selectThread('mickey')" id="thread-mickey" style="padding:16px 20px; cursor:pointer;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;">Mickey Castonguay</div>
+              <span style="font-size:11px;color:var(--text-muted);">Mar 20</span>
+            </div>
+            <div style="font-size:12px;color:var(--text-muted);">Absolute Drain Service</div>
+            <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Thanks so much, the site looks great!</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active thread -->
+      <div class="card" id="activeThread">
+        <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+          <div class="card-title">Jordan Rivera — Apex Marketing Co.</div>
+        </div>
+        <div class="message-thread" id="threadBody">
+          <div class="message-bubble from-client"><div class="bubble-body">This looks awesome. Really clean. Looking forward to seeing the designs!</div><div class="bubble-meta">Jordan · Feb 15</div></div>
+          <div class="message-bubble from-admin"><div class="bubble-body">Design phase is complete — I've attached the mockups for your review. Let me know if you want any changes before we start building.</div><div class="bubble-meta">You · Mar 14</div></div>
+          <div class="message-bubble from-client"><div class="bubble-body">Love it! Only one thing — can we make the hero headline a bit bigger on mobile?</div><div class="bubble-meta">Jordan · Mar 14</div></div>
+          <div class="message-bubble from-admin"><div class="bubble-body">Done — headline is now 10% larger on mobile. Build phase is underway. Just need your HubSpot API key to finish the automation.</div><div class="bubble-meta">You · Today</div></div>
+          <div class="message-bubble from-admin"><div class="bubble-body">Also — your Invoice #3 for the Build phase is now up. Due Apr 1.</div><div class="bubble-meta">You · Today</div></div>
+        </div>
+        <div class="message-input-area" style="margin-top:16px;">
+          <textarea class="message-input" id="adminMsg" placeholder="Reply to Jordan..." rows="2" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAdminMsg();}"></textarea>
+          <button class="btn-primary" onclick="sendAdminMsg()" style="padding:12px 18px;flex-shrink:0;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  if (sessionStorage.getItem('portal_user') !== 'admin') window.location.href = 'login.html';
+  document.getElementById('threadBody').scrollTop = 99999;
+
+  function selectThread(id) {
+    document.querySelectorAll('[id^="thread-"]').forEach(el => {
+      el.style.background = '';
+      el.style.borderLeft = '';
+    });
+    const el = document.getElementById('thread-' + id);
+    el.style.background = 'rgba(56,196,240,0.05)';
+    el.style.borderLeft = '2px solid var(--accent-blue)';
+    const badge = el.querySelector('.nav-badge');
+    if (badge) badge.remove();
+  }
+
+  function sendAdminMsg() {
+    const input = document.getElementById('adminMsg');
+    const text = input.value.trim();
+    if (!text) return;
+    const thread = document.getElementById('threadBody');
+    const time = new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+    const bubble = document.createElement('div');
+    bubble.className = 'message-bubble from-admin';
+    bubble.innerHTML = `<div class="bubble-body">${text}</div><div class="bubble-meta">You · Today, ${time}</div>`;
+    thread.appendChild(bubble);
+    input.value = '';
+    thread.scrollTop = thread.scrollHeight;
+  }
+</script>
+</body>
+</html>

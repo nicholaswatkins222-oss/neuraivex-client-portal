@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — Neuraivex Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="static/style.css" />
+</head>
+<body>
+<div class="portal-layout">
+
+  <!-- ADMIN SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <a href="admin.html" class="logo">NEURAIVE<span class="logo-x-wrap"><span class="logo-x">X</span><span class="logo-node"></span></span></a>
+    </div>
+    <div class="sidebar-client-info">
+      <div class="sidebar-client-name">Nicholas Watkins</div>
+      <div class="sidebar-client-company" style="color:var(--accent-blue);">Admin Panel</div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="admin.html" class="nav-item active">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        All Clients
+      </a>
+      <a href="admin-messages.html" class="nav-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Message Inbox
+        <span class="nav-badge">2</span>
+      </a>
+      <a href="admin-keys.html" class="nav-item">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        API Key Vault
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="login.html" class="logout-btn" onclick="sessionStorage.clear()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="page-header">
+      <div class="label" style="margin-bottom:8px;">Admin</div>
+      <h1 class="page-title">All Clients</h1>
+      <p class="page-subtitle">Overview of every active client and their project status.</p>
+    </div>
+
+    <!-- Summary Stats -->
+    <div class="stat-grid" style="grid-template-columns:repeat(4,1fr); margin-bottom:28px;">
+      <div class="stat-card card-accent">
+        <div class="label" style="margin-bottom:10px;">Active Clients</div>
+        <div class="stat-value gradient-text">2</div>
+        <div class="stat-delta" style="color:var(--text-muted);">1 onboarding</div>
+      </div>
+      <div class="stat-card">
+        <div class="label" style="margin-bottom:10px;">Open Invoices</div>
+        <div class="stat-value" style="color:var(--warning);">$1,800</div>
+        <div class="stat-delta" style="color:var(--text-muted);">1 due Apr 1</div>
+      </div>
+      <div class="stat-card">
+        <div class="label" style="margin-bottom:10px;">Unread Messages</div>
+        <div class="stat-value" style="color:var(--accent-blue);">2</div>
+        <div class="stat-delta" style="color:var(--text-muted);">Across all clients</div>
+      </div>
+      <div class="stat-card">
+        <div class="label" style="margin-bottom:10px;">Total Leads</div>
+        <div class="stat-value">124</div>
+        <div class="stat-delta up">↑ 23% this month</div>
+      </div>
+    </div>
+
+    <!-- Clients Table -->
+    <div class="card" style="margin-bottom:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <div class="card-title">Client Roster</div>
+        <button class="btn-primary btn-sm" onclick="alert('Add client flow coming in full build')">+ Add Client</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Company</th>
+              <th>Current Phase</th>
+              <th>Unread</th>
+              <th>Open Invoice</th>
+              <th>Last Login</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="td-primary">Jordan Rivera</td>
+              <td>Apex Marketing Co.</td>
+              <td><span class="pill pill-blue">Build</span></td>
+              <td><span class="nav-badge" style="background:var(--accent-blue);">2</span></td>
+              <td style="color:var(--warning);">$1,800</td>
+              <td>Today, 9:02 AM</td>
+              <td>
+                <div style="display:flex; gap:6px;">
+                  <a href="admin-client.html" class="btn-secondary btn-sm">View</a>
+                  <a href="admin-project.html" class="btn-secondary btn-sm">Edit Project</a>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="td-primary">Mickey Castonguay</td>
+              <td>Absolute Drain Service</td>
+              <td><span class="pill pill-success">Live</span></td>
+              <td style="color:var(--text-muted);">—</td>
+              <td style="color:var(--text-muted);">—</td>
+              <td>Mar 20, 2:14 PM</td>
+              <td>
+                <div style="display:flex; gap:6px;">
+                  <a href="admin-client.html" class="btn-secondary btn-sm">View</a>
+                  <a href="admin-project.html" class="btn-secondary btn-sm">Edit Project</a>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px;">Quick Actions</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <a href="admin-client.html" class="btn-secondary" style="text-align:center;">View Client Detail</a>
+          <a href="admin-project.html" class="btn-secondary" style="text-align:center;">Edit Project Phases</a>
+          <a href="admin-keys.html" class="btn-secondary" style="text-align:center;">View API Keys</a>
+          <a href="admin-messages.html" class="btn-secondary" style="text-align:center;">Message Inbox</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:16px;">Add Records</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button class="btn-secondary" onclick="alert('Invoice form coming in full build')">+ Add Invoice</button>
+          <button class="btn-secondary" onclick="alert('Lead form coming in full build')">+ Add Lead</button>
+          <button class="btn-secondary" onclick="alert('Client onboarding coming in full build')">+ Onboard New Client</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+<script>
+  if (sessionStorage.getItem('portal_user') !== 'admin') window.location.href = 'login.html';
+</script>
+</body>
+</html>
