@@ -4,7 +4,7 @@ from flask_mail import Message as MailMessage
 from datetime import datetime
 import bcrypt
 
-from app import db, mail
+from extensions import db
 from models import User
 
 auth_bp = Blueprint('auth', __name__)
@@ -72,6 +72,7 @@ def forgot_password():
             token = _make_reset_token(user.id)
             reset_url = url_for('auth.reset_password', token=token, _external=True)
             try:
+                from extensions import mail
                 msg = MailMessage(
                     subject='Reset your Neuraivex portal password',
                     recipients=[user.email],

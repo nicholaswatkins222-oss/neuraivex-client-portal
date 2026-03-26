@@ -1,14 +1,7 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
-from flask_wtf.csrf import CSRFProtect
-from flask_mail import Mail
+from extensions import db, login_manager, csrf, mail
 import os
 
-db = SQLAlchemy()
-login_manager = LoginManager()
-csrf = CSRFProtect()
-mail = Mail()
 
 def create_app():
     app = Flask(__name__)
@@ -54,13 +47,10 @@ def create_app():
     import re as _re
     @app.template_filter('strfdate')
     def strfdate_filter(dt, fmt):
-        """Format a date/datetime, stripping leading zeros cross-platform."""
         if dt is None:
             return ''
-        # Replace %-d / %-I style Linux flags with %d / %I before formatting
         safe_fmt = fmt.replace('%-', '%')
         result = dt.strftime(safe_fmt)
-        # Now strip any remaining leading zeros from day and hour fields
         result = _re.sub(r'(?<!\d)0(\d)(?!\d)', r'\1', result)
         return result
 
@@ -68,6 +58,7 @@ def create_app():
         db.create_all()
 
     return app
+
 
 app = create_app()
 

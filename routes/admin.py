@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from datetime import datetime, date
 import bcrypt
 
-from app import db
+from extensions import db
 from models import User, Project, Phase, PhaseComment, ApiKey, Invoice, Lead, Message
 from encryption import decrypt_value
 
