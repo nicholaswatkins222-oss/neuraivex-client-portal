@@ -19,17 +19,7 @@
         <p style="font-size:13px; color:var(--text-muted);">Client Portal</p>
       </div>
 
-      <div class="demo-creds">
-        <div style="font-size:10px; letter-spacing:0.1em; text-transform:uppercase; color:var(--accent-blue); margin-bottom:8px; font-weight:600;">Demo Credentials</div>
-        <div class="cred-row"><span class="cred-key">Client email</span><span class="cred-val">jordan@apexmarketing.co</span></div>
-        <div class="cred-row"><span class="cred-key">Password</span><span class="cred-val">demo123</span></div>
-        <div style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(56,196,240,0.1);">
-          <div class="cred-row"><span class="cred-key">Admin email</span><span class="cred-val">admin@neuraivex.com</span></div>
-          <div class="cred-row"><span class="cred-key">Password</span><span class="cred-val">admin123</span></div>
-        </div>
-      </div>
-
-      {% with messages = get_flashed_messages(with_categories=true) %}
+{% with messages = get_flashed_messages(with_categories=true) %}
         {% for category, message in messages %}
           <div style="margin-bottom:14px; padding:10px 14px; border-radius:8px; font-size:12px; font-family:'Space Grotesk',sans-serif;
             {% if category == 'error' %}background:rgba(240,88,88,0.1); border:1px solid rgba(240,88,88,0.25); color:var(--danger);
