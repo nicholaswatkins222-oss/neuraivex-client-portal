@@ -8,3 +8,4 @@ cryptography
 itsdangerous
 gunicorn
 python-dotenv
+psycopg2-binary
