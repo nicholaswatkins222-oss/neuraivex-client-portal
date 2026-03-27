@@ -11,6 +11,21 @@
   {% block head %}{% endblock %}
 </head>
 <body>
+
+<!-- MOBILE TOP BAR -->
+<div class="mobile-bar">
+  <button class="hamburger" id="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <a href="{{ url_for('dashboard.index') if current_user.role == 'client' else url_for('admin.clients') }}" class="logo" style="font-size:15px;">
+    NEURAIVE<span class="logo-x-wrap"><span class="logo-x">X</span><span class="logo-node"></span></span>
+  </a>
+  <div style="width:30px;"></div>
+</div>
+
+<!-- SIDEBAR OVERLAY -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
 <div class="portal-layout">
 
   <!-- SIDEBAR -->
@@ -112,5 +127,21 @@
   </main>
 </div>
 {% block scripts %}{% endblock %}
+<script>
+function toggleSidebar() {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const hamburger = document.getElementById('hamburger');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+  hamburger.classList.toggle('open');
+}
+// Close sidebar on nav item click (mobile)
+document.querySelectorAll('.nav-item, .logout-btn').forEach(el => {
+  el.addEventListener('click', () => {
+    if (window.innerWidth <= 768) toggleSidebar();
+  });
+});
+</script>
 </body>
 </html>
