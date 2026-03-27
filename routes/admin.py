@@ -40,10 +40,11 @@ def clients():
 @admin_required
 def client_detail(client_id):
     client = User.query.get_or_404(client_id)
-    project = Project.query.filter_by(client_id=client_id).first()
-    phases = []
-    if project:
-        phases = project.phases.order_by(Phase.order_index).all()
+    projects_raw = Project.query.filter_by(client_id=client_id).order_by(Project.created_at).all()
+    projects_with_phases = []
+    for proj in projects_raw:
+        phases = proj.phases.order_by(Phase.order_index).all()
+        projects_with_phases.append({'project': proj, 'phases': phases})
 
     invoices = Invoice.query.filter_by(client_id=client_id).order_by(Invoice.date.desc()).all()
     leads = Lead.query.filter_by(client_id=client_id).order_by(Lead.created_at.desc()).limit(10).all()
@@ -54,8 +55,7 @@ def client_detail(client_id):
     return render_template(
         'admin/client_detail.html',
         client=client,
-        project=project,
-        phases=phases,
+        projects_with_phases=projects_with_phases,
         invoices=invoices,
         leads=leads,
         keys=keys,

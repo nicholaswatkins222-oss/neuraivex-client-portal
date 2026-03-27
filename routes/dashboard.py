@@ -21,15 +21,16 @@ def index():
         Lead.created_at >= datetime(now.year, now.month, 1)
     ).count()
 
-    # Current active phase
-    project = Project.query.filter_by(client_id=current_user.id).first()
+    # All projects with phases
+    projects_raw = Project.query.filter_by(client_id=current_user.id).order_by(Project.created_at).all()
+    projects_with_phases = []
     current_phase = None
-    all_phases = []
-    if project:
-        all_phases = project.phases.order_by(Phase.order_index).all()
-        current_phase = next((p for p in all_phases if p.status == 'active'), None)
-        if not current_phase:
-            current_phase = next((p for p in all_phases if p.status == 'pending'), None)
+    for proj in projects_raw:
+        phases = proj.phases.order_by(Phase.order_index).all()
+        active = next((p for p in phases if p.status == 'active'), None)
+        if current_phase is None and active:
+            current_phase = active
+        projects_with_phases.append({'project': proj, 'phases': phases})
 
     # Open invoice total
     open_invoices = Invoice.query.filter_by(client_id=current_user.id, status='unpaid').all()
@@ -56,8 +57,7 @@ def index():
         open_total=open_total,
         next_due=next_due,
         unread_count=unread_count,
-        project=project,
-        all_phases=all_phases,
+        projects_with_phases=projects_with_phases,
         recent_messages=recent_messages,
         admin_user=admin_user,
         now=now,

@@ -41,26 +41,29 @@
   <!-- Project Phases -->
   <div class="card">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <div class="card-title">Project Phases</div>
-      {% if project %}
-      <a href="{{ url_for('admin.project_edit', project_id=project.id) }}" class="btn-secondary btn-sm">Edit</a>
-      {% endif %}
+      <div class="card-title">Projects</div>
     </div>
-    {% if project %}
-    <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">{{ project.name }}</p>
-    {% for phase in phases %}
-    <div style="display:flex; align-items:center; justify-content:space-between; padding:9px 12px; background:var(--bg-elevated); border-radius:8px; margin-bottom:6px;
-      {% if phase.status == 'active' %}background:rgba(56,196,240,0.06); border:1px solid rgba(56,196,240,0.2);{% endif %}">
-      <span style="font-size:13px; font-family:'Space Grotesk',sans-serif; font-weight:500; {% if phase.status == 'active' %}color:var(--accent-blue);{% endif %}">
-        {{ loop.index }}. {{ phase.name }}
-      </span>
-      {% if phase.status == 'done' %}<span class="pill pill-success" style="font-size:10px;">Done</span>
-      {% elif phase.status == 'active' %}<span class="pill pill-blue" style="font-size:10px;">Active</span>
-      {% else %}<span class="pill pill-muted" style="font-size:10px;">Pending</span>{% endif %}
-    </div>
-    {% endfor %}
+    {% if projects_with_phases %}
+      {% for item in projects_with_phases %}
+      {% if not loop.first %}<div style="border-top:1px solid rgba(56,196,240,0.08); margin:14px 0;"></div>{% endif %}
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+        <span style="font-size:11px; color:var(--accent-blue); font-family:'Space Grotesk',sans-serif; font-weight:600; letter-spacing:0.05em; text-transform:uppercase;">{{ item.project.name }}</span>
+        <a href="{{ url_for('admin.project_edit', project_id=item.project.id) }}" class="btn-secondary btn-sm">Edit</a>
+      </div>
+      {% for phase in item.phases %}
+      <div style="display:flex; align-items:center; justify-content:space-between; padding:9px 12px; background:var(--bg-elevated); border-radius:8px; margin-bottom:6px;
+        {% if phase.status == 'active' %}background:rgba(56,196,240,0.06); border:1px solid rgba(56,196,240,0.2);{% endif %}">
+        <span style="font-size:13px; font-family:'Space Grotesk',sans-serif; font-weight:500; {% if phase.status == 'active' %}color:var(--accent-blue);{% endif %}">
+          {{ loop.index }}. {{ phase.name }}
+        </span>
+        {% if phase.status == 'done' %}<span class="pill pill-success" style="font-size:10px;">Done</span>
+        {% elif phase.status == 'active' %}<span class="pill pill-blue" style="font-size:10px;">Active</span>
+        {% else %}<span class="pill pill-muted" style="font-size:10px;">Pending</span>{% endif %}
+      </div>
+      {% endfor %}
+      {% endfor %}
     {% else %}
-    <p style="font-size:13px; color:var(--text-muted);">No project assigned.</p>
+    <p style="font-size:13px; color:var(--text-muted);">No projects assigned.</p>
     {% endif %}
   </div>
 

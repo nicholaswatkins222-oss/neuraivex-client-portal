@@ -11,11 +11,12 @@ project_bp = Blueprint('project', __name__)
 @project_bp.route('/project')
 @login_required
 def index():
-    project = Project.query.filter_by(client_id=current_user.id).first()
-    phases = []
-    if project:
-        phases = project.phases.order_by(Phase.order_index).all()
-    return render_template('project.html', project=project, phases=phases)
+    projects_raw = Project.query.filter_by(client_id=current_user.id).order_by(Project.created_at).all()
+    projects_with_phases = []
+    for proj in projects_raw:
+        phases = proj.phases.order_by(Phase.order_index).all()
+        projects_with_phases.append({'project': proj, 'phases': phases})
+    return render_template('project.html', projects_with_phases=projects_with_phases)
 
 
 @project_bp.route('/project/comment', methods=['POST'])

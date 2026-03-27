@@ -50,20 +50,24 @@
       <div class="card-title">Project Status</div>
       <a href="{{ url_for('project.index') }}" class="btn-secondary btn-sm">View Details</a>
     </div>
-    {% if all_phases %}
-    <div style="display:flex; flex-direction:column; gap:10px;">
-      {% for phase in all_phases %}
-      <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px;
-        {% if phase.status == 'active' %}background:rgba(56,196,240,0.06); border:1px solid rgba(56,196,240,0.2);{% else %}background:var(--bg-elevated);{% endif %}
-        border-radius:8px; {% if phase.status == 'pending' %}opacity:0.5;{% endif %}">
-        <span style="font-size:13px; font-family:'Space Grotesk',sans-serif; font-weight:500;
-          {% if phase.status == 'active' %}color:var(--accent-blue);{% endif %}">{{ phase.name }}</span>
-        {% if phase.status == 'done' %}<span class="pill pill-success">Done</span>
-        {% elif phase.status == 'active' %}<span class="pill pill-blue">In Progress</span>
-        {% else %}<span class="pill pill-muted">Pending</span>{% endif %}
+    {% if projects_with_phases %}
+      {% for item in projects_with_phases %}
+      {% if not loop.first %}<div style="border-top:1px solid rgba(56,196,240,0.08); margin:16px 0;"></div>{% endif %}
+      <div style="font-size:11px; color:var(--accent-blue); font-family:'Space Grotesk',sans-serif; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; margin-bottom:10px;">{{ item.project.name }}</div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        {% for phase in item.phases %}
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px;
+          {% if phase.status == 'active' %}background:rgba(56,196,240,0.06); border:1px solid rgba(56,196,240,0.2);{% else %}background:var(--bg-elevated);{% endif %}
+          border-radius:8px; {% if phase.status == 'pending' %}opacity:0.5;{% endif %}">
+          <span style="font-size:13px; font-family:'Space Grotesk',sans-serif; font-weight:500;
+            {% if phase.status == 'active' %}color:var(--accent-blue);{% endif %}">{{ phase.name }}</span>
+          {% if phase.status == 'done' %}<span class="pill pill-success">Done</span>
+          {% elif phase.status == 'active' %}<span class="pill pill-blue">In Progress</span>
+          {% else %}<span class="pill pill-muted">Pending</span>{% endif %}
+        </div>
+        {% endfor %}
       </div>
       {% endfor %}
-    </div>
     {% else %}
     <p style="font-size:13px; color:var(--text-muted);">No project set up yet. Contact Nicholas to get started.</p>
     {% endif %}
