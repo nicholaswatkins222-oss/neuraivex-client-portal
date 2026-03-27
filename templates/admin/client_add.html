@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %}Add Client — Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="label" style="margin-bottom:8px;">Admin Panel</div>
+  <h1 class="page-title">Add Client</h1>
+  <p class="page-subtitle">Create a new client account, project, and phases in one shot.</p>
+</div>
+
+<div class="card card-accent" style="max-width:640px;">
+  <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+    <div class="label" style="margin-bottom:14px;">Account</div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-input" type="text" name="name" placeholder="Mickey Castonguay" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Company</label>
+        <input class="form-input" type="text" name="company" placeholder="Absolute Drain Service" />
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" name="email" placeholder="client@company.com" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Temp Password</label>
+        <input class="form-input" type="text" name="password" placeholder="Portal2026!" required />
+      </div>
+    </div>
+
+    <hr style="border:none; border-top:1px solid var(--border); margin:20px 0;" />
+    <div class="label" style="margin-bottom:14px;">Project</div>
+
+    <div class="form-group">
+      <label class="form-label">Project Name</label>
+      <input class="form-input" type="text" name="project_name" placeholder="Website Development" required />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Project Description (optional)</label>
+      <input class="form-input" type="text" name="project_description" placeholder="Brief description of what we're building..." />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Phases — one per line</label>
+      <textarea class="form-input" name="phases" rows="6" placeholder="Discovery&#10;Design&#10;Build&#10;Review&#10;Live" required style="min-height:120px;">Discovery
+Design
+Build
+Review
+Live</textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Active Phase (number)</label>
+      <input class="form-input" type="number" name="active_phase" value="1" min="1" placeholder="1" />
+      <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Phases before this are marked done. This phase is active. Rest are pending.</div>
+    </div>
+
+    <hr style="border:none; border-top:1px solid var(--border); margin:20px 0;" />
+    <div class="label" style="margin-bottom:4px;">First Invoice <span style="font-weight:400; text-transform:none; font-size:11px; letter-spacing:0;">(optional)</span></div>
+    <p style="font-size:12px; color:var(--text-muted); margin:0 0 14px;">Leave blank to skip.</p>
+
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <input class="form-input" type="text" name="inv_description" placeholder="Website Development" />
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="form-group">
+        <label class="form-label">Amount ($)</label>
+        <input class="form-input" type="number" name="inv_amount" step="0.01" min="0" placeholder="1500.00" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-input" name="inv_status">
+          <option value="unpaid">Unpaid</option>
+          <option value="paid">Paid</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="form-group">
+        <label class="form-label">Invoice Date</label>
+        <input class="form-input" type="date" name="inv_date" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Due Date</label>
+        <input class="form-input" type="date" name="inv_due" />
+      </div>
+    </div>
+
+    <div style="display:flex; gap:12px; margin-top:8px;">
+      <button type="submit" class="btn-primary">Create Client →</button>
+      <a href="{{ url_for('admin.clients') }}" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

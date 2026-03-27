@@ -115,6 +115,98 @@ def keys_view(client_id):
     return render_template('admin/keys_view.html', client=client, keys=keys, decrypted_keys=decrypted_keys, confirmed=confirmed)
 
 
+@admin_bp.route('/client/add', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def client_add():
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip().lower()
+        company = request.form.get('company', '').strip() or None
+        password = request.form.get('password', '').strip()
+        project_name = request.form.get('project_name', '').strip()
+        project_desc = request.form.get('project_description', '').strip() or None
+        phase_names = [p.strip() for p in request.form.get('phases', '').split('\n') if p.strip()]
+        active_phase = request.form.get('active_phase', '1')
+
+        # Invoice fields (optional)
+        inv_description = request.form.get('inv_description', '').strip()
+        inv_amount = request.form.get('inv_amount', '').strip()
+        inv_status = request.form.get('inv_status', 'unpaid')
+        inv_date_str = request.form.get('inv_date', '')
+        inv_due_str = request.form.get('inv_due', '')
+
+        if not all([name, email, password, project_name, phase_names]):
+            flash('Name, email, password, project name, and at least one phase are required.', 'error')
+            return render_template('admin/client_add.html')
+
+        if User.query.filter_by(email=email).first():
+            flash('A user with that email already exists.', 'error')
+            return render_template('admin/client_add.html')
+
+        try:
+            active_idx = int(active_phase)
+        except ValueError:
+            active_idx = 1
+
+        pw_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+        client = User(email=email, password_hash=pw_hash, name=name, company=company, role='client')
+        db.session.add(client)
+        db.session.flush()
+
+        project = Project(client_id=client.id, name=project_name, description=project_desc)
+        db.session.add(project)
+        db.session.flush()
+
+        for i, phase_name in enumerate(phase_names, 1):
+            if i < active_idx:
+                status = 'done'
+                completed_at = datetime.utcnow()
+            elif i == active_idx:
+                status = 'active'
+                completed_at = None
+            else:
+                status = 'pending'
+                completed_at = None
+            db.session.add(Phase(
+                project_id=project.id,
+                name=phase_name,
+                order_index=i,
+                status=status,
+                completed_at=completed_at,
+            ))
+
+        # Optional invoice
+        if inv_description and inv_amount and inv_date_str and inv_due_str:
+            try:
+                inv = Invoice(
+                    client_id=client.id,
+                    invoice_number='INV-001',
+                    description=inv_description,
+                    amount=float(inv_amount),
+                    status=inv_status,
+                    date=date.fromisoformat(inv_date_str),
+                    due_date=date.fromisoformat(inv_due_str),
+                )
+                db.session.add(inv)
+            except (ValueError, TypeError):
+                pass
+
+        # Send welcome message
+        msg = Message(
+            sender_id=current_user.id,
+            recipient_id=client.id,
+            body=f"Hey {name.split()[0]}, welcome to your Neuraivex client portal! This is where we'll stay in sync throughout the project. Feel free to message me here anytime.",
+        )
+        db.session.add(msg)
+
+        db.session.commit()
+        flash(f'Client account created for {name}.', 'success')
+        return redirect(url_for('admin.client_detail', client_id=client.id))
+
+    return render_template('admin/client_add.html')
+
+
 @admin_bp.route('/invoice/add', methods=['GET', 'POST'])
 @login_required
 @admin_required
