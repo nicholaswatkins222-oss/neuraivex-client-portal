@@ -83,6 +83,8 @@ class Invoice(db.Model):
     date = db.Column(db.Date, nullable=False)
     due_date = db.Column(db.Date, nullable=False)
     pdf_url = db.Column(db.String(500))
+    stripe_payment_link = db.Column(db.String(500))      # https://buy.stripe.com/...
+    stripe_payment_link_id = db.Column(db.String(100))   # plink_xxx (for webhook matching)
 
 
 class Lead(db.Model):

@@ -34,6 +34,7 @@ def create_app():
     from routes.invoices import invoices_bp
     from routes.messages import messages_bp
     from routes.admin import admin_bp
+    from routes.stripe_webhook import stripe_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
@@ -43,6 +44,10 @@ def create_app():
     app.register_blueprint(invoices_bp)
     app.register_blueprint(messages_bp)
     app.register_blueprint(admin_bp)
+
+    # Stripe webhook must be CSRF-exempt (raw payload required for signature verification)
+    csrf.exempt(stripe_bp)
+    app.register_blueprint(stripe_bp)
 
     # Cross-platform date formatting filter (avoids %-d which only works on Linux)
     import re as _re

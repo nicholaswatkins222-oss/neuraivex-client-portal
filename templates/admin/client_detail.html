@@ -80,10 +80,18 @@
         <div style="font-size:13px; font-family:'Space Grotesk',sans-serif; font-weight:500;">{{ inv.invoice_number }}</div>
         <div style="font-size:11px; color:var(--text-muted);">{{ inv.description[:40] }}{% if inv.description|length > 40 %}…{% endif %}</div>
       </div>
-      <div style="text-align:right;">
+      <div style="text-align:right; display:flex; align-items:center; gap:8px;">
         <div style="font-size:13px; font-weight:600; font-family:'Space Grotesk',sans-serif;">${{ '{:,.0f}'.format(inv.amount) }}</div>
-        {% if inv.status == 'paid' %}<span class="pill pill-success" style="font-size:10px;">Paid</span>
-        {% else %}<span class="pill pill-warning" style="font-size:10px;">Unpaid</span>{% endif %}
+        {% if inv.status == 'paid' %}
+          <span class="pill pill-success" style="font-size:10px;">Paid</span>
+        {% else %}
+          {% if inv.stripe_payment_link %}
+            <a href="{{ inv.stripe_payment_link }}" target="_blank" class="btn-secondary btn-sm" style="font-size:10px;">Link ↗</a>
+          {% else %}
+            <button class="btn-secondary btn-sm" style="font-size:10px;" onclick="generateLink({{ inv.id }}, this)">Generate Link</button>
+          {% endif %}
+          <span class="pill pill-warning" style="font-size:10px;">Unpaid</span>
+        {% endif %}
       </div>
     </div>
     {% endfor %}
@@ -150,4 +158,28 @@
   <p style="font-size:13px; color:var(--text-muted);">No keys submitted yet.</p>
   {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function generateLink(invoiceId, btn) {
+  btn.disabled = true;
+  btn.textContent = '...';
+  fetch('/admin/invoice/' + invoiceId + '/generate-payment-link', {
+    method: 'POST',
+    headers: {'X-CSRFToken': '{{ csrf_token() }}'},
+  })
+  .then(r => r.json())
+  .then(data => {
+    if (data.url) {
+      btn.outerHTML = '<a href="' + data.url + '" target="_blank" class="btn-secondary btn-sm" style="font-size:10px;">Link ↗</a>';
+    } else {
+      btn.textContent = 'Error';
+      btn.disabled = false;
+      alert(data.error || 'Failed to generate link');
+    }
+  })
+  .catch(() => { btn.textContent = 'Error'; btn.disabled = false; });
+}
+</script>
 {% endblock %}

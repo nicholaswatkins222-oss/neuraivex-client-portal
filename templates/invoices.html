@@ -57,10 +57,10 @@
             {% else %}<span class="pill pill-warning">Unpaid</span>{% endif %}
           </td>
           <td>
-            {% if inv.pdf_url %}
+            {% if inv.stripe_payment_link and inv.status == 'unpaid' %}
+            <a href="{{ inv.stripe_payment_link }}" target="_blank" class="btn-primary btn-sm">Pay Now</a>
+            {% elif inv.pdf_url %}
             <a href="{{ inv.pdf_url }}" target="_blank" class="btn-secondary btn-sm">View PDF</a>
-            {% elif inv.status == 'unpaid' %}
-            <button class="btn-secondary btn-sm" onclick="alert('Payment link coming soon.')">Pay Now</button>
             {% else %}
             <span class="muted">—</span>
             {% endif %}

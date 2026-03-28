@@ -1,9 +1,12 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, abort
+from flask import Blueprint, render_template, redirect, url_for, request, flash, abort, jsonify, current_app
 from flask_login import login_required, current_user
+from flask_mail import Message as MailMessage
 from datetime import datetime, date
 import bcrypt
+import os
+import stripe
 
-from extensions import db
+from extensions import db, mail
 from models import User, Project, Phase, PhaseComment, ApiKey, Invoice, Lead, Message
 from encryption import decrypt_value
 
@@ -201,7 +204,32 @@ def client_add():
         db.session.add(msg)
 
         db.session.commit()
-        flash(f'Client account created for {name}.', 'success')
+
+        # Auto-email login credentials
+        try:
+            portal_url = os.environ.get('PORTAL_URL', 'https://portal.neuraivex.com')
+            email_msg = MailMessage(
+                subject='Your Neuraivex Client Portal Access',
+                sender=current_app.config['MAIL_DEFAULT_SENDER'],
+                recipients=[email],
+            )
+            email_msg.html = f"""
+<div style="font-family:sans-serif;max-width:520px;margin:0 auto;color:#111;">
+  <h2 style="margin-bottom:4px;">Welcome to your Neuraivex portal, {name.split()[0]}!</h2>
+  <p style="color:#555;margin-top:4px;">Your client dashboard is ready. Here are your login details:</p>
+  <table style="margin:20px 0;border-collapse:collapse;width:100%;">
+    <tr><td style="padding:8px 0;font-weight:600;width:100px;">URL</td><td><a href="{portal_url}">{portal_url}</a></td></tr>
+    <tr><td style="padding:8px 0;font-weight:600;">Email</td><td>{email}</td></tr>
+    <tr><td style="padding:8px 0;font-weight:600;">Password</td><td style="font-family:monospace;">{password}</td></tr>
+  </table>
+  <p style="color:#555;">We recommend changing your password after your first login.<br>Reply to this email or message me in the portal if you have any questions.</p>
+  <p style="margin-top:24px;">— Nicholas<br><span style="color:#888;font-size:13px;">Neuraivex</span></p>
+</div>"""
+            mail.send(email_msg)
+        except Exception as e:
+            current_app.logger.warning(f'Welcome email failed for {email}: {e}')
+
+        flash(f'Client account created for {name}. Welcome email sent.', 'success')
         return redirect(url_for('admin.client_detail', client_id=client.id))
 
     return render_template('admin/client_add.html')
@@ -337,6 +365,41 @@ def _get_threads():
         threads.append({'client': client, 'last_msg': last_msg, 'unread': unread})
     threads.sort(key=lambda t: (-(t['unread'] > 0), -(t['last_msg'].created_at.timestamp() if t['last_msg'] else 0)))
     return threads
+
+
+@admin_bp.route('/invoice/<int:invoice_id>/generate-payment-link', methods=['POST'])
+@login_required
+@admin_required
+def generate_payment_link(invoice_id):
+    invoice = Invoice.query.get_or_404(invoice_id)
+
+    stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
+    if not stripe.api_key:
+        return jsonify({'error': 'STRIPE_SECRET_KEY not configured'}), 500
+
+    try:
+        # Create a one-time price for this invoice amount
+        price = stripe.Price.create(
+            currency='usd',
+            unit_amount=int(invoice.amount * 100),  # cents
+            product_data={'name': f'{invoice.invoice_number} — {invoice.description}'},
+        )
+
+        portal_url = os.environ.get('PORTAL_URL', 'https://portal.neuraivex.com')
+        payment_link = stripe.PaymentLink.create(
+            line_items=[{'price': price.id, 'quantity': 1}],
+            after_completion={'type': 'redirect', 'redirect': {'url': f'{portal_url}/invoices'}},
+            metadata={'invoice_id': str(invoice.id)},
+            payment_intent_data={'metadata': {'invoice_id': str(invoice.id)}},
+        )
+
+        invoice.stripe_payment_link = payment_link.url
+        invoice.stripe_payment_link_id = payment_link.id
+        db.session.commit()
+
+        return jsonify({'url': payment_link.url})
+    except stripe.error.StripeError as e:
+        return jsonify({'error': str(e)}), 500
 
 
 @admin_bp.route('/messages/send', methods=['POST'])
