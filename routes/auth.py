@@ -90,9 +90,12 @@ def forgot_password():
                     html_content=html_body
                 )
                 sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
-                sg.send(msg)
+                response = sg.send(msg)
+                current_app.logger.info(f'SendGrid response: {response.status_code} {response.body}')
             except Exception as e:
                 current_app.logger.error(f'Password reset email failed: {e}')
+                import traceback
+                current_app.logger.error(traceback.format_exc())
 
         flash('If that email is registered, you\'ll receive a reset link shortly.', 'success')
         return redirect(url_for('auth.login'))
