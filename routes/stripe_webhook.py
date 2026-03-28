@@ -1,7 +1,9 @@
 import os
-import stripe
+import json
 import requests
-from flask import Blueprint, request, abort
+from flask import Blueprint, request, abort, current_app
+
+import stripe
 
 from extensions import db
 from models import Invoice
@@ -32,28 +34,39 @@ def webhook():
 
     try:
         event = stripe.Webhook.construct_event(payload, sig_header, webhook_secret)
-    except stripe.error.SignatureVerificationError:
+    except Exception as e:
+        current_app.logger.error(f'Stripe webhook signature error: {e}')
         abort(400)
-    except Exception:
-        abort(400)
 
-    if event['type'] == 'checkout.session.completed':
-        session = event['data']['object']
-        payment_link_id = session.get('payment_link')
+    try:
+        # Support both dict-style (stripe <5) and attribute-style (stripe 5+) access
+        event_type = event.get('type') if hasattr(event, 'get') else event.type
+        if event_type == 'checkout.session.completed':
+            data_obj = event.get('data', {}).get('object', {}) if hasattr(event, 'get') else event.data.object
 
-        if payment_link_id:
-            invoice = Invoice.query.filter_by(stripe_payment_link_id=payment_link_id).first()
-            if invoice and invoice.status != 'paid':
-                invoice.status = 'paid'
-                db.session.commit()
+            # payment_link field — try dict access then attribute access
+            if hasattr(data_obj, 'get'):
+                payment_link_id = data_obj.get('payment_link')
+            else:
+                payment_link_id = getattr(data_obj, 'payment_link', None)
 
-                client = invoice.client
-                amount = '${:,.0f}'.format(invoice.amount)
-                _telegram_ping(
-                    f'<b>Payment received</b>\n'
-                    f'Client: {client.name} ({client.company or client.email})\n'
-                    f'Invoice: {invoice.invoice_number} — {invoice.description}\n'
-                    f'Amount: {amount}'
-                )
+            if payment_link_id:
+                invoice = Invoice.query.filter_by(stripe_payment_link_id=str(payment_link_id)).first()
+                if invoice and invoice.status != 'paid':
+                    invoice.status = 'paid'
+                    db.session.commit()
+
+                    client = invoice.client
+                    amount = '${:,.0f}'.format(invoice.amount)
+                    _telegram_ping(
+                        f'<b>Payment received</b>\n'
+                        f'Client: {client.name} ({client.company or client.email})\n'
+                        f'Invoice: {invoice.invoice_number} — {invoice.description}\n'
+                        f'Amount: {amount}'
+                    )
+    except Exception as e:
+        current_app.logger.error(f'Stripe webhook handler error: {e}')
+        # Still return 200 so Stripe stops retrying — error is logged for debugging
+        return '', 200
 
     return '', 200
