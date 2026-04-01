@@ -84,7 +84,7 @@ def forgot_password():
   <p style="font-size:12px; color:#8892a4; margin-top:28px;">If you didn't request this, you can safely ignore this email. Your password won't change.</p>
 </div>'''
                 msg = SGMail(
-                    from_email='nicholas@neuraivex.com',
+                    from_email=os.environ.get('MAIL_FROM', 'nicholas@neuraivex.com'),
                     to_emails=user.email,
                     subject='Reset your Neuraivex portal password',
                     html_content=html_body

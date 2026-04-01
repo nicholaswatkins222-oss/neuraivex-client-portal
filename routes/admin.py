@@ -205,27 +205,38 @@ def client_add():
 
         db.session.commit()
 
-        # Auto-email login credentials
+        # Auto-email login credentials with a password reset link (never send plaintext passwords)
         try:
+            from routes.auth import _make_reset_token
             portal_url = os.environ.get('PORTAL_URL', 'https://portal.neuraivex.com')
-            email_msg = MailMessage(
-                subject='Your Neuraivex Client Portal Access',
-                sender=current_app.config['MAIL_DEFAULT_SENDER'],
-                recipients=[email],
-            )
-            email_msg.html = f"""
-<div style="font-family:sans-serif;max-width:520px;margin:0 auto;color:#111;">
-  <h2 style="margin-bottom:4px;">Welcome to your Neuraivex portal, {name.split()[0]}!</h2>
-  <p style="color:#555;margin-top:4px;">Your client dashboard is ready. Here are your login details:</p>
-  <table style="margin:20px 0;border-collapse:collapse;width:100%;">
-    <tr><td style="padding:8px 0;font-weight:600;width:100px;">URL</td><td><a href="{portal_url}">{portal_url}</a></td></tr>
-    <tr><td style="padding:8px 0;font-weight:600;">Email</td><td>{email}</td></tr>
-    <tr><td style="padding:8px 0;font-weight:600;">Password</td><td style="font-family:monospace;">{password}</td></tr>
+            reset_token = _make_reset_token(client.id)
+            reset_url = url_for('auth.reset_password', token=reset_token, _external=True)
+            from sendgrid import SendGridAPIClient
+            from sendgrid.helpers.mail import Mail as SGMail
+            html_body = f"""
+<div style="font-family:'Space Grotesk',Arial,sans-serif; max-width:520px; margin:0 auto; background:#060D1F; color:#e2e8f0; padding:40px 32px; border-radius:12px; border:1px solid rgba(56,196,240,0.15);">
+  <div style="font-size:20px; font-weight:700; margin-bottom:4px;">NEURAIVEX</div>
+  <p style="color:#8892a4; font-size:13px; margin-top:0;">Client Portal</p>
+  <hr style="border:none; border-top:1px solid rgba(56,196,240,0.1); margin:20px 0;" />
+  <h2 style="margin-bottom:4px;">Welcome, {name.split()[0]}!</h2>
+  <p style="color:#8892a4; margin-top:4px;">Your client dashboard is ready.</p>
+  <table style="margin:20px 0; border-collapse:collapse; width:100%;">
+    <tr><td style="padding:8px 0; font-weight:600; width:80px; color:#8892a4;">URL</td><td><a href="{portal_url}" style="color:#38C4F0;">{portal_url}</a></td></tr>
+    <tr><td style="padding:8px 0; font-weight:600; color:#8892a4;">Email</td><td>{email}</td></tr>
   </table>
-  <p style="color:#555;">We recommend changing your password after your first login.<br>Reply to this email or message me in the portal if you have any questions.</p>
-  <p style="margin-top:24px;">— Nicholas<br><span style="color:#888;font-size:13px;">Neuraivex</span></p>
+  <p style="font-size:14px;">Click below to set your password and access your portal — this link expires in <strong>24 hours</strong>.</p>
+  <a href="{reset_url}" style="display:inline-block; background:linear-gradient(135deg,#38C4F0,#7C5CE6); color:#fff; text-decoration:none; padding:13px 28px; border-radius:8px; font-weight:600; font-size:14px;">Set Your Password →</a>
+  <p style="font-size:12px; color:#8892a4; margin-top:28px;">Reply to this email or message me in the portal if you have any questions.</p>
+  <p style="margin-top:24px; font-size:13px;">— Nicholas<br><span style="color:#8892a4;">Neuraivex</span></p>
 </div>"""
-            mail.send(email_msg)
+            sg_msg = SGMail(
+                from_email='nicholas@neuraivex.com',
+                to_emails=email,
+                subject='Your Neuraivex Client Portal Access',
+                html_content=html_body,
+            )
+            sg = SendGridAPIClient(os.environ.get('SENDGRID_API_KEY'))
+            sg.send(sg_msg)
         except Exception as e:
             current_app.logger.warning(f'Welcome email failed for {email}: {e}')
 
