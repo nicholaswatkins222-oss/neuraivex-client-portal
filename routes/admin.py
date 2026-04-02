@@ -432,4 +432,5 @@ def message_send():
     )
     db.session.add(msg)
     db.session.commit()
+    flash('Message sent.', 'success')
     return redirect(url_for('admin.message_thread', client_id=client_id))

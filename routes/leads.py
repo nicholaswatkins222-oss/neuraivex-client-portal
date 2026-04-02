@@ -52,4 +52,4 @@ def chart_data():
 
 def _week_of_month(dt):
     first_day = dt.replace(day=1)
-    return (dt.day + first_day.weekday()) // 7 + 1
+    return (dt.day + first_day.weekday() - 1) // 7 + 1
