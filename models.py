@@ -107,3 +107,42 @@ class Message(db.Model):
     body = db.Column(db.Text, nullable=False)
     read = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+
+class Course(db.Model):
+    __tablename__ = 'courses'
+    id            = db.Column(db.Integer, primary_key=True)
+    title         = db.Column(db.String(255), nullable=False)
+    description   = db.Column(db.Text)
+    thumbnail_url = db.Column(db.String(500))
+    order_index   = db.Column(db.Integer, nullable=False, default=0)
+    is_published  = db.Column(db.Boolean, nullable=False, default=False)
+    created_at    = db.Column(db.DateTime, default=datetime.utcnow)
+
+    lessons = db.relationship('Lesson', backref='course', lazy='dynamic',
+                              order_by='Lesson.order_index')
+
+
+class Lesson(db.Model):
+    __tablename__ = 'lessons'
+    id               = db.Column(db.Integer, primary_key=True)
+    course_id        = db.Column(db.Integer, db.ForeignKey('courses.id'), nullable=False)
+    title            = db.Column(db.String(255), nullable=False)
+    description      = db.Column(db.Text)
+    video_url        = db.Column(db.String(500))   # YouTube/Vimeo embed URL
+    content          = db.Column(db.Text)           # Optional written content
+    order_index      = db.Column(db.Integer, nullable=False, default=0)
+    duration_minutes = db.Column(db.Integer)
+
+    progress = db.relationship('LessonProgress', backref='lesson', lazy='dynamic')
+
+
+class LessonProgress(db.Model):
+    __tablename__ = 'lesson_progress'
+    id           = db.Column(db.Integer, primary_key=True)
+    client_id    = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    lesson_id    = db.Column(db.Integer, db.ForeignKey('lessons.id'), nullable=False)
+    completed    = db.Column(db.Boolean, default=False)
+    completed_at = db.Column(db.DateTime)
+
+    __table_args__ = (db.UniqueConstraint('client_id', 'lesson_id'),)

@@ -31,7 +31,7 @@
   <form method="POST" action="{{ url_for('messages.send') }}" id="msgForm">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     <div class="message-input-area">
-      <textarea class="message-input" name="body" id="msgInput" placeholder="Type a message..." rows="2" onkeydown="handleKey(event)"></textarea>
+      <textarea class="message-input" name="body" id="msgInput" placeholder="Type a message..." rows="2" maxlength="5000" onkeydown="handleKey(event)"></textarea>
       <button type="submit" class="btn-primary" style="padding:12px 18px; flex-shrink:0;">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
       </button>

@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block title %}{{ course.title }} — Neuraivex Portal{% endblock %}
+
+{% block content %}
+<div style="margin-bottom:8px;">
+  <a href="{{ url_for('courses.index') }}" style="font-size:13px; color:var(--text-muted); text-decoration:none;">← Back to Courses</a>
+</div>
+
+<div class="page-header" style="margin-bottom:24px;">
+  <div class="label" style="margin-bottom:8px;">Course</div>
+  <h1 class="page-title">{{ course.title }}</h1>
+  {% if course.description %}
+  <p class="page-subtitle">{{ course.description }}</p>
+  {% endif %}
+</div>
+
+<!-- Progress summary -->
+<div class="card" style="margin-bottom:24px; display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+  <div style="flex:1; min-width:160px;">
+    <div style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">{{ completed_count }}/{{ total }} lessons complete</div>
+    <div style="background:rgba(56,196,240,0.1); border-radius:100px; height:6px; overflow:hidden;">
+      <div style="background:linear-gradient(90deg,#38C4F0,#7C5CE6); height:100%; width:{{ progress_pct }}%; transition:width 0.4s;" id="overall-bar"></div>
+    </div>
+  </div>
+  <div style="font-size:28px; font-weight:700; font-family:'Space Grotesk',sans-serif;" class="gradient-text" id="overall-pct">{{ progress_pct }}%</div>
+</div>
+
+<!-- Lesson list -->
+<div style="display:flex; flex-direction:column; gap:16px;">
+  {% for item in lesson_data %}
+  {% set lesson = item.lesson %}
+  <div class="card" id="lesson-card-{{ lesson.id }}" style="transition:border-color 0.2s; {% if item.completed %}border-color:rgba(45,212,160,0.3);{% endif %}">
+    <div style="display:flex; align-items:flex-start; gap:16px; flex-wrap:wrap;">
+
+      <!-- Completion toggle -->
+      <button
+        onclick="toggleLesson({{ lesson.id }}, {{ course.id }})"
+        id="btn-{{ lesson.id }}"
+        style="flex-shrink:0; width:28px; height:28px; border-radius:50%; border:2px solid {% if item.completed %}var(--success){% else %}rgba(56,196,240,0.3){% endif %}; background:{% if item.completed %}rgba(45,212,160,0.1){% else %}transparent{% endif %}; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s;"
+        title="Mark {% if item.completed %}incomplete{% else %}complete{% endif %}"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="{% if item.completed %}var(--success){% else %}rgba(56,196,240,0.4){% endif %}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" id="check-{{ lesson.id }}">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </button>
+
+      <div style="flex:1; min-width:0;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px; flex-wrap:wrap;">
+          <div class="card-title" style="font-size:15px; margin:0;">{{ lesson.title }}</div>
+          {% if lesson.duration_minutes %}
+          <span style="font-size:11px; color:var(--text-muted); background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); padding:2px 8px; border-radius:20px;">{{ lesson.duration_minutes }} min</span>
+          {% endif %}
+          {% if item.completed %}
+          <span class="pill pill-success" id="pill-{{ lesson.id }}">Complete</span>
+          {% else %}
+          <span class="pill pill-muted" id="pill-{{ lesson.id }}">Not started</span>
+          {% endif %}
+        </div>
+
+        {% if lesson.description %}
+        <p style="font-size:13px; color:var(--text-muted); margin:0 0 14px; line-height:1.5;">{{ lesson.description }}</p>
+        {% endif %}
+
+        {% if lesson.video_url %}
+        <div style="border-radius:10px; overflow:hidden; aspect-ratio:16/9; background:#0A1128; margin-bottom:14px;">
+          <iframe
+            src="{{ lesson.video_url }}"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+            style="width:100%; height:100%;"
+            loading="lazy"
+          ></iframe>
+        </div>
+        {% endif %}
+
+        {% if lesson.content %}
+        <div style="font-size:13px; color:var(--text-secondary); line-height:1.7; white-space:pre-wrap;">{{ lesson.content }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+let completedCount = {{ completed_count }};
+let total = {{ total }};
+
+async function toggleLesson(lessonId, courseId) {
+  const btn = document.getElementById('btn-' + lessonId);
+  btn.disabled = true;
+
+  try {
+    const resp = await fetch(`/courses/${courseId}/lesson/${lessonId}/complete`, {
+      method: 'POST',
+      headers: { 'X-CSRFToken': csrfToken },
+    });
+    const data = await resp.json();
+
+    const check = document.getElementById('check-' + lessonId);
+    const pill = document.getElementById('pill-' + lessonId);
+    const card = document.getElementById('lesson-card-' + lessonId);
+
+    if (data.completed) {
+      btn.style.borderColor = 'var(--success)';
+      btn.style.background = 'rgba(45,212,160,0.1)';
+      check.setAttribute('stroke', 'var(--success)');
+      pill.textContent = 'Complete';
+      pill.className = 'pill pill-success';
+      card.style.borderColor = 'rgba(45,212,160,0.3)';
+      completedCount++;
+    } else {
+      btn.style.borderColor = 'rgba(56,196,240,0.3)';
+      btn.style.background = 'transparent';
+      check.setAttribute('stroke', 'rgba(56,196,240,0.4)');
+      pill.textContent = 'Not started';
+      pill.className = 'pill pill-muted';
+      card.style.borderColor = '';
+      completedCount--;
+    }
+
+    const pct = total > 0 ? Math.round((completedCount / total) * 100) : 0;
+    document.getElementById('overall-bar').style.width = pct + '%';
+    document.getElementById('overall-pct').textContent = pct + '%';
+  } catch (e) {
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+  }
+}
+</script>
+{% endblock %}

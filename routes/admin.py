@@ -9,6 +9,7 @@ import stripe
 from extensions import db, mail
 from models import User, Project, Phase, PhaseComment, ApiKey, Invoice, Lead, Message
 from encryption import decrypt_value
+from sanitize import strip_html, check_length
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -76,7 +77,7 @@ def project_edit(project_id):
     if request.method == 'POST':
         for phase in phases:
             new_status = request.form.get(f'status_{phase.id}')
-            new_note = request.form.get(f'note_{phase.id}', '').strip()
+            new_note = strip_html(request.form.get(f'note_{phase.id}', '').strip())
             if new_status in ('pending', 'active', 'done'):
                 if new_status == 'done' and phase.status != 'done':
                     phase.completed_at = datetime.utcnow()
@@ -299,10 +300,10 @@ def lead_add():
 
     if request.method == 'POST':
         client_id = request.form.get('client_id', type=int)
-        name = request.form.get('name', '').strip()
-        email = request.form.get('email', '').strip() or None
-        phone = request.form.get('phone', '').strip() or None
-        source = request.form.get('source', '').strip() or None
+        name = strip_html(request.form.get('name', '').strip())
+        email = strip_html(request.form.get('email', '').strip()) or None
+        phone = strip_html(request.form.get('phone', '').strip()) or None
+        source = strip_html(request.form.get('source', '').strip()) or None
         status = request.form.get('status', 'new')
 
         if not client_id or not name:
@@ -418,11 +419,16 @@ def generate_payment_link(invoice_id):
 @admin_required
 def message_send():
     client_id = request.form.get('client_id', type=int)
-    body = request.form.get('body', '').strip()
+    body = strip_html(request.form.get('body', '').strip())
 
     if not client_id or not body:
         flash('Client and message body required.', 'error')
         return redirect(url_for('admin.message_inbox'))
+
+    ok, err = check_length(body, 5000, 'Message')
+    if not ok:
+        flash(err, 'error')
+        return redirect(url_for('admin.message_thread', client_id=client_id))
 
     client = User.query.get_or_404(client_id)
     msg = Message(

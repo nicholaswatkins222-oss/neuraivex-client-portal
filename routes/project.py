@@ -2,8 +2,9 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 from datetime import datetime
 
-from extensions import db
+from extensions import db, limiter
 from models import Project, Phase, PhaseComment
+from sanitize import strip_html, check_length
 
 project_bp = Blueprint('project', __name__)
 
@@ -21,12 +22,18 @@ def index():
 
 @project_bp.route('/project/comment', methods=['POST'])
 @login_required
+@limiter.limit('20 per minute')
 def comment():
     phase_id = request.form.get('phase_id', type=int)
-    body = request.form.get('body', '').strip()
+    body = strip_html(request.form.get('body', '').strip())
 
     if not phase_id or not body:
         flash('Comment cannot be empty.', 'error')
+        return redirect(url_for('project.index'))
+
+    ok, err = check_length(body, 2000, 'Comment')
+    if not ok:
+        flash(err, 'error')
         return redirect(url_for('project.index'))
 
     phase = Phase.query.get_or_404(phase_id)

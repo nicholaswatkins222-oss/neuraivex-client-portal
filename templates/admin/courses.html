@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Courses — Admin{% endblock %}
+
+{% block content %}
+<div class="page-header" style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
+  <div>
+    <div class="label" style="margin-bottom:8px;">Admin Panel</div>
+    <h1 class="page-title">Courses</h1>
+    <p class="page-subtitle">Manage training courses published to client portals.</p>
+  </div>
+  <a href="{{ url_for('admin_courses.course_add') }}" class="btn-primary" style="align-self:flex-end;">+ New Course</a>
+</div>
+
+<div class="card">
+  {% if courses %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Order</th>
+          <th>Title</th>
+          <th>Lessons</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for course in courses %}
+        <tr>
+          <td style="color:var(--text-muted);">{{ course.order_index }}</td>
+          <td class="td-primary">{{ course.title }}</td>
+          <td>{{ course.lessons.count() }}</td>
+          <td>
+            {% if course.is_published %}
+            <span class="pill pill-success">Published</span>
+            {% else %}
+            <span class="pill pill-muted">Draft</span>
+            {% endif %}
+          </td>
+          <td>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <a href="{{ url_for('admin_courses.course_edit', course_id=course.id) }}" style="font-size:12px; color:#38C4F0; text-decoration:none;">Edit</a>
+              <a href="{{ url_for('admin_courses.lesson_add', course_id=course.id) }}" style="font-size:12px; color:var(--text-muted); text-decoration:none;">+ Lesson</a>
+              <form method="POST" action="{{ url_for('admin_courses.course_delete', course_id=course.id) }}" onsubmit="return confirm('Delete this course and all its lessons?');" style="margin:0;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                <button type="submit" style="background:none; border:none; color:var(--danger); font-size:12px; cursor:pointer; padding:0; font-family:inherit;">Delete</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p style="font-size:13px; color:var(--text-muted); padding:20px 0;">No courses yet. <a href="{{ url_for('admin_courses.course_add') }}" style="color:#38C4F0;">Create your first course →</a></p>
+  {% endif %}
+</div>
+{% endblock %}

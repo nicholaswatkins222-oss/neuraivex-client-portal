@@ -2,8 +2,9 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 from datetime import datetime
 
-from extensions import db
+from extensions import db, limiter
 from models import Message, User
+from sanitize import strip_html, check_length
 
 messages_bp = Blueprint('messages', __name__)
 
@@ -34,10 +35,16 @@ def index():
 
 @messages_bp.route('/messages/send', methods=['POST'])
 @login_required
+@limiter.limit('20 per minute')
 def send():
-    body = request.form.get('body', '').strip()
+    body = strip_html(request.form.get('body', '').strip())
     if not body:
         flash('Message cannot be empty.', 'error')
+        return redirect(url_for('messages.index'))
+
+    ok, err = check_length(body, 5000, 'Message')
+    if not ok:
+        flash(err, 'error')
         return redirect(url_for('messages.index'))
 
     admin_user = _get_admin()

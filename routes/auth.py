@@ -4,7 +4,7 @@ from datetime import datetime
 import bcrypt
 import os
 
-from extensions import db
+from extensions import db, limiter
 from models import User
 
 auth_bp = Blueprint('auth', __name__)
@@ -27,6 +27,7 @@ def _verify_reset_token(token, max_age=3600):
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
+@limiter.limit('10 per minute', methods=['POST'])
 def login():
     if current_user.is_authenticated:
         if current_user.role == 'admin':
@@ -59,6 +60,7 @@ def logout():
 
 
 @auth_bp.route('/forgot-password', methods=['GET', 'POST'])
+@limiter.limit('5 per minute', methods=['POST'])
 def forgot_password():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard.index'))

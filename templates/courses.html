@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Courses — Neuraivex Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="label" style="margin-bottom:8px;">Training Library</div>
+  <h1 class="page-title">Courses</h1>
+  <p class="page-subtitle">Step-by-step training to get the most out of your AI systems.</p>
+</div>
+
+{% if course_data %}
+<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); gap:20px; margin-top:8px;">
+  {% for item in course_data %}
+  {% set course = item.course %}
+  <a href="{{ url_for('courses.detail', course_id=course.id) }}" style="text-decoration:none;">
+    <div class="card" style="cursor:pointer; transition:border-color 0.2s; display:flex; flex-direction:column; gap:14px;">
+      {% if course.thumbnail_url %}
+      <div style="border-radius:8px; overflow:hidden; aspect-ratio:16/9; background:#0D1630;">
+        <img src="{{ course.thumbnail_url }}" alt="{{ course.title }}" style="width:100%; height:100%; object-fit:cover; opacity:0.9;" />
+      </div>
+      {% else %}
+      <div style="border-radius:8px; aspect-ratio:16/9; background:linear-gradient(135deg,rgba(56,196,240,0.08),rgba(124,92,230,0.08)); display:flex; align-items:center; justify-content:center;">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(56,196,240,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+      </div>
+      {% endif %}
+
+      <div>
+        <div class="card-title" style="margin-bottom:4px; color:#FFFFFF;">{{ course.title }}</div>
+        {% if course.description %}
+        <p style="font-size:13px; color:var(--text-muted); margin:0 0 12px; line-height:1.5;">{{ course.description }}</p>
+        {% endif %}
+
+        <div style="font-size:12px; color:var(--text-muted); margin-bottom:8px;">
+          {{ item.completed }}/{{ item.total }} lessons complete
+        </div>
+
+        <!-- Progress bar -->
+        <div style="background:rgba(56,196,240,0.1); border-radius:100px; height:4px; overflow:hidden;">
+          <div style="background:linear-gradient(90deg,#38C4F0,#7C5CE6); height:100%; width:{{ item.progress_pct }}%; transition:width 0.4s;"></div>
+        </div>
+        {% if item.progress_pct == 100 %}
+        <div style="margin-top:8px; font-size:12px; color:var(--success); font-weight:600;">Complete</div>
+        {% elif item.progress_pct > 0 %}
+        <div style="margin-top:8px; font-size:12px; color:#38C4F0;">{{ item.progress_pct }}% done</div>
+        {% endif %}
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card" style="text-align:center; padding:48px 24px;">
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(56,196,240,0.3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 16px;"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+  <p style="font-size:14px; color:var(--text-muted); margin:0;">No courses published yet. Check back soon.</p>
+</div>
+{% endif %}
+{% endblock %}

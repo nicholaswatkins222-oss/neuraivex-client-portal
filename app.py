@@ -1,5 +1,5 @@
 from flask import Flask
-from extensions import db, login_manager, csrf, mail
+from extensions import db, login_manager, csrf, mail, limiter
 import os
 
 
@@ -24,6 +24,7 @@ def create_app():
     mail.init_app(app)
     login_manager.init_app(app)
     csrf.init_app(app)
+    limiter.init_app(app)
     login_manager.login_view = 'auth.login'
 
     from routes.auth import auth_bp
@@ -35,6 +36,8 @@ def create_app():
     from routes.messages import messages_bp
     from routes.admin import admin_bp
     from routes.stripe_webhook import stripe_bp
+    from routes.courses import courses_bp
+    from routes.admin_courses import admin_courses_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
@@ -44,6 +47,8 @@ def create_app():
     app.register_blueprint(invoices_bp)
     app.register_blueprint(messages_bp)
     app.register_blueprint(admin_bp)
+    app.register_blueprint(courses_bp)
+    app.register_blueprint(admin_courses_bp)
 
     # Stripe webhook must be CSRF-exempt (raw payload required for signature verification)
     csrf.exempt(stripe_bp)

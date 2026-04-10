@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}New Course — Admin{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="label" style="margin-bottom:8px;">Admin Panel</div>
+  <h1 class="page-title">New Course</h1>
+  <p class="page-subtitle">Create a course to publish training content to client portals.</p>
+</div>
+
+<div class="card card-accent" style="max-width:600px;">
+  <form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input class="form-input" type="text" name="title" maxlength="255" placeholder="AI Automation Foundations" required />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Description (optional)</label>
+      <textarea class="form-input" name="description" rows="3" placeholder="A short description shown on the courses page..." style="min-height:80px;"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Thumbnail URL (optional)</label>
+      <input class="form-input" type="url" name="thumbnail_url" maxlength="500" placeholder="https://..." />
+      <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">16:9 image. Leave blank for a placeholder.</div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+      <div class="form-group">
+        <label class="form-label">Order Index</label>
+        <input class="form-input" type="number" name="order_index" value="0" min="0" />
+        <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">Lower = first in list.</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Status</label>
+        <select class="form-input" name="is_published">
+          <option value="0">Draft (hidden from clients)</option>
+          <option value="1">Published</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:12px; margin-top:8px;">
+      <button type="submit" class="btn-primary">Create Course →</button>
+      <a href="{{ url_for('admin_courses.courses') }}" class="btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
